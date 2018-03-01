@@ -1,11 +1,13 @@
-# Limestone
-[ ![Codeship Status for archonic/limestone](https://app.codeship.com/projects/0e5987c0-e048-0135-9d79-3ee50941199c/status?branch=master)](https://app.codeship.com/projects/266527)
+# Limestone Accounts
 
-Limestone is a boilerplate SaaS app built with Rails 5 and allows for an opinionated integration with NPM using webpacker. The opinions of this boilerplate stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
+Limestone is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker). The opinions of this boilerplate stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
+
+Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
 
 ## The Stack
 The gemset has been chosen to be modern, performant, and take care of a number of business concerns common to SaaS.
 * Administrate
+* Apartment
 * Bootstrap 4
 * CoffeeScript
 * Devise
@@ -17,6 +19,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 * Pretender
 * Pundit
 * Rspec (w/ shoulda_matchers, database_cleaner)
+* Rolify
 * Searchkick
 * Shrine
 * Sidekiq
@@ -25,17 +28,17 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 * Turbolinks 5
 
 ## Features
-* Trial begins upon registration without credit card.
+* Free trial begins upon registration without credit card.
 * Subscription management. Card update form and cancel account button.
 * Emails for welcome, billing updated, invoice paid, invoice failed and trial expiring. All except welcome are controlled by Stripe webhooks.
 * Invoice PDF attached to invoice paid email.
-* Mail sends through Sidekiq with deliver_later. Devise mailing also configured for Sidekiq dispatch.
+* Mail sends through Sidekiq with `deliver_later`. Devise mailing also configured for Sidekiq dispatch.
 * Direct uploading to S3 with ActiveStorage. Lazy transform for resizing. Demonstrated with user avatars.
 * Icon helper for user avatars with fallback to circle with user initials. Icon helper for font awesome icons.
 * Administrate dashboard lets you CRUD records (ex: users). Easy to add more and customize as you like. Visit /admin/.
 * Impersonate users through administrate dashboard.
 * Pretty modals using bootstrap integrated into rails_ujs data-confirm. Demonstrated with cancel account button.
-* Banner with a link to billing page users that are past due.
+* Banner with a link to billing page for accounts that are past due.
 * Opinionated search integration using Elasticsearch via Searchkick. Gem is in place but integration is up to you.
 * Feature control using the flipper gem. Demonstrated with public_registration.
 * 86% RSpec test coverage.
@@ -43,6 +46,8 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 ## Roadmap
 * In-browser image cropping using jcrop or the likes.
 * Custom error pages.
+* Per-seat billing.
+* Comprehensive permissions groups and resource access management.
 
 ## Notes
 * RSpec controller tests have been omitted in favour of requests tests.
