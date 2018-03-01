@@ -8,7 +8,6 @@ class UserDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    invoices: Field::HasMany,
     id: Field::Number,
     email: Field::String,
     full_name: Field::String,
@@ -24,7 +23,6 @@ class UserDashboard < Administrate::BaseDashboard
     last_sign_in_at: Field::DateTime,
     current_sign_in_ip: Field::String,
     last_sign_in_ip: Field::String,
-    current_period_end: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -41,8 +39,6 @@ class UserDashboard < Administrate::BaseDashboard
     :role,
     :sign_in_count,
     :last_sign_in_ip,
-    :invoices,
-    :current_period_end,
     :created_at,
   ].freeze
 
@@ -56,7 +52,6 @@ class UserDashboard < Administrate::BaseDashboard
     :sign_in_count,
     :current_sign_in_at,
     :current_sign_in_ip,
-    :current_period_end,
     :created_at,
     :invoices
   ].freeze
@@ -68,7 +63,6 @@ class UserDashboard < Administrate::BaseDashboard
     :email,
     :first_name,
     :last_name,
-    :current_period_end,
     :role
   ].freeze
 

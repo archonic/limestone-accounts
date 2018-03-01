@@ -1,17 +1,21 @@
 class ApplicationController < ActionController::Base
   include Pundit
   include ActionView::Helpers::DateHelper
+  include ApartmentHelper
+
   protect_from_forgery with: :exception
   impersonates :user
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_access, if: :access_required?
 
   def after_sign_in_path_for(resource)
-    if resource.trialing?
-      time_left = distance_of_time_in_words(Time.current, current_user.current_period_end)
-      flash[:notice] = "You have #{time_left} left in your trial!"
+    # If subdomain isn't provided, go to users first account
+    account = if request.subdomains.try(:first).nil?
+      resource.accounts.order(:id).first
+    else
+      current_account
     end
-    dashboard_path
+    dashboard_url(subdomain: account.subdomain)
   end
 
   protected
@@ -22,16 +26,19 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :account_update, keys: added_params
   end
 
-  # Users are always allowed to manage their session, registration and subscription
+  # Users are always allowed to manage their session, registration, subscription and account
   def access_required?
     user_signed_in? &&
     !devise_controller? &&
-    controller_name != 'subscriptions'
+    !%w(
+      subscriptions
+      accounts
+    ).include?(controller_name)
   end
 
-  # Redirect users in bad standing to billing page
+  # Redirect users in accounts in bad standing to billing page
   def check_access
-    if current_user.removed?
+    if current_account && !current_account.accessible?
       redirect_to billing_path, flash: { error: 'Your access has been removed. Please update your card. Access will be restored once payment succeeds.' }
     end
   end

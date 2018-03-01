@@ -10,10 +10,82 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_01_29_173731) do
+ActiveRecord::Schema.define(version: 2018_02_24_000415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "subdomain", limit: 30, null: false
+    t.integer "plan_id"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "card_last4", limit: 4
+    t.integer "card_exp_month", limit: 2
+    t.integer "card_exp_year"
+    t.string "card_type"
+    t.datetime "current_period_end"
+    t.boolean "trialing", default: true, null: false
+    t.boolean "past_due", default: false, null: false
+    t.boolean "unpaid", default: false, null: false
+    t.boolean "cancelled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cancelled"], name: "index_accounts_on_cancelled"
+    t.index ["current_period_end"], name: "index_accounts_on_current_period_end"
+    t.index ["name"], name: "index_accounts_on_name"
+    t.index ["past_due"], name: "index_accounts_on_past_due"
+    t.index ["subdomain"], name: "index_accounts_on_subdomain", unique: true
+    t.index ["unpaid"], name: "index_accounts_on_unpaid"
+  end
+
+  create_table "accounts_users", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.integer "user_id", null: false
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
+    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
+  end
+
+  create_table "accounts_users_roles", id: false, force: :cascade do |t|
+    t.bigint "accounts_user_id"
+    t.bigint "role_id"
+    t.index ["role_id"], name: "index_accounts_users_roles_on_role_id"
+    t.index ["accounts_user_id", "role_id"], name: "index_accounts_users_roles_on_accounts_user_id_and_role_id"
+    t.index ["accounts_user_id"], name: "index_accounts_users_roles_on_accounts_user_id"
+  end
+
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "email", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "full_name", null: false
+    t.string "encrypted_password", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.boolean "super_admin", null: false, default: false
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -37,7 +109,7 @@ ActiveRecord::Schema.define(version: 2018_01_29_173731) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.integer "user_id"
+    t.integer "account_id"
     t.string "stripe_id"
     t.integer "amount"
     t.string "currency"
@@ -54,40 +126,6 @@ ActiveRecord::Schema.define(version: 2018_01_29_173731) do
     t.integer "amount", null: false
     t.string "associated_role", null: false
     t.string "stripe_id"
+    t.boolean "active", null: false, default: true
   end
-
-  create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email", null: false
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.string "full_name", null: false
-    t.string "encrypted_password", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "stripe_id"
-    t.string "stripe_subscription_id"
-    t.string "card_last4"
-    t.integer "card_exp_month"
-    t.integer "card_exp_year"
-    t.string "card_type"
-    t.integer "role"
-    t.boolean "trialing", null: false, default: true
-    t.boolean "past_due", null: false, default: false
-    t.datetime "discarded_at"
-    t.datetime "current_period_end"
-    t.integer "plan_id"
-    t.index ["current_period_end"], name: "index_users_on_current_period_end"
-    t.index ["discarded_at"], name: "index_users_on_discarded_at"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
-
 end

@@ -1,0 +1,22 @@
+%h1 Create a new workspace
+= simple_form_for @account do |a|
+  = a.simple_fields_for :user do |o|
+    = o.input :plan_id, collection: @plans, selected: @plans.last.id
+    %small.form-text.text-muted You can change this at any time.
+    %hr
+    %h3 Admin Details
+    = o.input :email, autofocus: true, required: true
+    .row.form-group
+      .col-6
+        = o.input :first_name, required: true
+      .col-6
+        = o.input :last_name, required: true
+    - min_pword_string = @minimum_password_length ? "Password (#{@minimum_password_length} characters minimum)" : 'Password'
+    = o.input :admin_password, label: min_pword_string, autocomplete: 'new-password'
+
+  %hr
+  %h3 Account Details
+  = a.input :name
+  = a.input :subdomain
+  .actions
+    = a.submit "Begin your free trial", class: 'btn btn-success btn-block'

@@ -1,0 +1,8 @@
+= form_tag(find_workspace_path) do
+  .form-group
+    .input-group.subdomain
+      = text_field_tag :subdomain, nil, label: false, autofocus: true, class: 'form-control text-right', placeholder: 'your-workspace'
+      .input-group-append
+        %span.input-group-text .lvh.me
+  .actions
+    = submit_tag 'Continue', class: 'btn btn-success btn-block'

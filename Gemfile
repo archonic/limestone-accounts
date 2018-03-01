@@ -43,10 +43,15 @@ gem 'redis-rails', '~> 5.0'
 gem 'haml', '~> 5'
 gem 'simple_form'
 
+# Multi-tennancy
+gem 'apartment', '~> 2.1'
+
 # Authentication
 gem 'devise', '~> 4'
 # Authorization
 gem 'pundit', '~> 1'
+# Roles w/resource scoping
+gem 'rolify', '~> 5'
 
 # Soft deletes for ActiveRecord done right
 gem 'discard'

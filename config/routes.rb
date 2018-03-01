@@ -4,53 +4,60 @@ Rails.application.routes.draw do
   # Administrate
   constraints CanAccessAdmin do
     namespace :admin do
-      root controller: 'users', action: :index
+      root controller: 'accounts', action: :index
+      resources :accounts
       resources :users do
         post :impersonate, on: :member
       end
       get :stop_impersonating, to: :stop_impersonating, controller: 'users'
       resources :invoices
-
       mount Flipper::UI.app(Flipper.instance) => '/flipper', as: 'flipper'
+      mount Sidekiq::Web => '/sidekiq', as: 'sidekiq'
     end
   end
 
   mount StripeEvent::Engine, at: '/stripe/webhook'
 
+  # Users are only added by invitation to accounts, but we still want users to manage their profile
   devise_for :users, path: '',
-    path_names: { sign_in: 'login', sign_out: 'logout', registration: 'profile' },
-    controllers: { registrations: 'users/registrations' } #sessions: 'users/sessions', passwords: "users/passwords"
-
-  unauthenticated :user do
-    devise_scope :user do
-      root to: 'pages#features'
-    end
+    skip: [:registrations],
+    path_names: { sign_in: 'signin', sign_out: 'signout' },
+    controllers: { sessions: 'users/sessions' } # registrations: 'users/registrations', passwords: "users/passwords"
+  as :user do
+    get 'users/edit', to: 'devise/registrations#edit', :as => 'edit_user_registration'
+    put 'users', to: 'devise/registrations#update', :as => 'user_registration'
+    post 'find_workspace', to: 'users/sessions#find_workspace', as: 'find_workspace'
   end
 
-  # Signed out (marketing) pages
-  get 'pricing', to: 'pages#pricing'
-  get 'about', to: 'pages#about'
-  get 'cancelled', to: 'pages#cancelled'
+  unauthenticated :user do
+    # Signed out (marketing) pages
+    root to: 'pages#features'
+    get 'pricing', to: 'pages#pricing'
+    get 'about', to: 'pages#about'
+    get 'cancelled', to: 'pages#cancelled'
+  end
+
+  # Account registration / management
+  # TODO separate into unauthenticated/authenticated
+  resources :accounts
 
   # Signed in pages
   authenticated :user do
-    root to: 'dashboard#show', as: 'dashboard'
-    get 'pro', to: 'pages#pro'
-
-    # This will check user from DB on every poll from /admin/sidekiq. May not want that.
-    authenticate :user, lambda { |u| u.admin? } do
-      mount Sidekiq::Web => '/sidekiq'
+    constraints Subdomain do
+      root to: 'dashboard#show', as: 'dashboard'
+      get 'pro', to: 'pages#pro'
     end
+
+    # Avatars
+    patch 'avatars', to: 'avatars#update'
+    delete 'avatar', to: 'avatars#destroy'
+
+    # Subscription stuff
+    get 'billing', to: 'subscriptions#show'
+    get 'subscribe', to: 'subscriptions#new'
+    patch 'subscriptions', to: 'subscriptions#update'
+    get 'invoices', to: 'invoices#index'
+    get 'invoices/:id', to: 'invoices#show', as: 'invoice'
   end
 
-  # Avatars
-  patch 'avatars', to: 'avatars#update'
-  delete 'avatar', to: 'avatars#destroy'
-
-  # Subscription stuff
-  get 'billing', to: 'subscriptions#show'
-  get 'subscribe', to: 'subscriptions#new'
-  patch 'subscriptions', to: 'subscriptions#update'
-  get 'invoices', to: 'invoices#index'
-  get 'invoices/:id', to: 'invoices#show', as: 'invoice'
 end

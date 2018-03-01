@@ -1,5 +1,9 @@
 .row.justify-content-md-center
-  .col-md-6
-    %h2 Log in
-    = render "devise/shared/signin_form"
-    = render "devise/shared/links"
+  .col-md-5
+    - if current_account.present?
+      %h2= "Sign in to #{@current_account.name}"
+      = render 'devise/shared/signin_form'
+    - else
+      %h2 Log in
+      = render 'devise/shared/find_workspace_form'
+    = render 'devise/shared/links'

@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class InvoiceDashboard < Administrate::BaseDashboard
+class AccountDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -9,19 +9,20 @@ class InvoiceDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    account: Field::BelongsTo,
-    stripe_id: Field::String,
-    amount: Field::Number,
-    currency: Field::String,
-    card_last4: Field::Number,
+    name: Field::String,
+    subdomain: Field::String,
+    plan: Field::BelongsTo,
+    stripe_customer_id: Field::String,
+    stripe_subscription_id: Field::String,
+    card_last4: Field::String,
+    card_exp_month: Field::String,
+    card_exp_year: Field::String,
     card_type: Field::String,
-    card_exp_month: Field::Number,
-    card_exp_year: Field::Number,
-    number: Field::String,
-    paid_at: Field::DateTime,
-    lines: Field::Text,
-    created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    current_period_end: Field::DateTime,
+    trialing: Field::Boolean,
+    past_due: Field::Boolean,
+    unpaid: Field::Boolean,
+    cancelled: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -31,48 +32,53 @@ class InvoiceDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :id,
-    :account,
-    :stripe_id,
-    :amount,
-    :currency,
-    :card_type,
-    :card_last4,
-    :card_exp_month,
-    :card_exp_year,
-    :number,
-    :paid_at,
-    :created_at,
+    :name,
+    :subdomain,
+    :plan,
+    :current_period_end,
+    :trialing,
+    :past_due,
+    :unpaid,
+    :cancelled
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :id,
-    :account,
-    :stripe_id,
-    :amount,
-    :currency,
-    :card_type,
+    :name,
+    :subdomain,
+    :plan,
+    :stripe_customer_id,
+    :stripe_subscription_id,
     :card_last4,
     :card_exp_month,
     :card_exp_year,
-    :number,
-    :paid_at,
-    :lines,
-    :created_at,
+    :current_period_end,
+    :trialing,
+    :past_due,
+    :unpaid,
+    :cancelled
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    # Nada! These come from Stripe. No edits allowed!
+    :name,
+    :subdomain,
+    :plan,
+    :current_period_end,
+    :trialing,
+    :past_due,
+    :unpaid,
+    :cancelled
   ].freeze
 
-  # Overwrite this method to customize how users are displayed
+  # Overwrite this method to customize how accounts are displayed
   # across all pages of the admin dashboard.
   #
-  # def display_resource(user)
-  #   "User ##{user.id}"
-  # end
+  def display_resource(account)
+    'Account ' + account.name
+  end
 end

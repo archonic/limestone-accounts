@@ -1,7 +1,7 @@
 # TODO This is formatting data for presentation in the model and violating MVC
 # Ditch the reciepts gem and just do a pdf view
 class Invoice < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :account
   serialize :lines, JSON
   include ActionView::Helpers::NumberHelper
 

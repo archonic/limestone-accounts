@@ -10,10 +10,15 @@
 # or comment out/remove if you want to manage plans manually.
 # https://stripe.com/docs/api#plan_object
 plans = Plan.create([
-  {name: 'Basic', amount: 900, interval: 'month', associated_role: 'basic', currency: 'usd'},
-  {name: 'Pro', amount: 1500, interval: 'month', associated_role: 'pro', currency: 'usd'}
+  {name: 'Basic', amount: 900, interval: 'month', associated_role: 'basic', currency: 'usd', active: true},
+  {name: 'Pro', amount: 1500, interval: 'month', associated_role: 'pro', currency: 'usd', active: true}
 ])
-puts "CREATED PLANS #{plans.map(&:name).join(', ')}"
+puts "CREATED PLANS #{plans.pluck(:name).join(', ')}"
+
+accounts = Account.create([
+  {name: 'Limestone', subdomain: 'limestone', plan_id: Plan.last.id, current_period_end: 5.years.from_now, trialing: false, past_due: false, unpaid: false, cancelled: false}
+])
+puts "CREATES ACCOUNTS #{accounts.pluck(:name).join(', ')}"
 
 admin_user = CreateAdminService.call
 puts 'CREATED ADMIN USER: ' << admin_user.email
