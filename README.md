@@ -47,6 +47,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 ## Notes
 * RSpec controller tests have been omitted in favour of requests tests.
 * You can run tests locally with `docker-compose run website rspec`
+* Because this is a boilerplate, there are no migrations. Rely on schema.rb and use `rails db:setup` to create the db and seed.
 
 ## Getting Started
 * Install [Docker](https://docs.docker.com/engine/installation/)
@@ -58,7 +59,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 ### Bonus points
 * Login as the admin user that was created (from .env)
 * Visit /admin/flipper
-* Create the feature `public_registration` as a boolean and enable it. Now anyone can register :clap:
+* Create the feature `public_registration` and enable it. Now anyone can register :clap:
 
 ### Setting up production
 A wiki will be written about this.
