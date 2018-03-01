@@ -37,6 +37,8 @@ services:
       - '.env'
 
   webpacker:
+    depends_on:
+      - 'postgres'
     build: .
     env_file:
       - '.env'
