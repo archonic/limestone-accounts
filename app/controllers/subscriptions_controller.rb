@@ -5,13 +5,13 @@ class SubscriptionsController < ApplicationController
   # NOTE This isn't a controller for a typical model. Subscriptions live in Stripe.
   # We use the columns on the user to know a users current subscription status.
 
-  # GET '/billing'
+  # GET /billing
   def show
     @plans = Plan.all
     redirect_to subscribe_path unless current_user.subscribed?
   end
 
-  # GET '/subscribe'
+  # GET /subscribe
   def new
     redirect_to billing_path if current_user.subscribed?
   end
