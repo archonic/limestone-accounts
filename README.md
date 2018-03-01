@@ -1,6 +1,6 @@
 # Limestone Accounts
 
-Limestone is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker). The opinions of this boilerplate stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
+Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker). The opinions stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
 
 Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
 
