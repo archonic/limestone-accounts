@@ -1,4 +1,5 @@
 # Limestone Accounts
+[ ![Codeship Status for archonic/limestone-accounts](https://app.codeship.com/projects/eb53d150-02ea-0136-1806-3ebecea35641/status?branch=master)](https://app.codeship.com/projects/280180)
 
 Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker). The opinions stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
 
