@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Administrate Dashboards', type: :request do
-  let(:admin) { create(:user, :admin) }
-  let(:user) { create(:user, :trialing) }
+  let(:super_admin) { create(:user, :super_admin) }
+  let(:user) { create(:user) }
 
-  context 'as admin' do
-    before { sign_in admin }
+  context 'as super admin' do
+    before { sign_in super_admin }
 
     describe UserDashboard do
       subject do

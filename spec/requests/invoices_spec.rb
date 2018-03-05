@@ -10,8 +10,7 @@ RSpec.describe InvoicesController, type: :request do
   after { StripeMock.stop }
   let(:mock_customer) { Stripe::Customer.create }
   let(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
-  let(:user_subscribed) { create(:user, :subscribed, stripe_id: mock_customer.id, stripe_subscription_id: mock_subscription.id) }
-  let(:user) { create(:user, :trialing) }
+  let(:user) { create(:user) }
   let(:invoice) { create(:invoice) }
 
   describe 'GET /invoices/:id' do
@@ -21,7 +20,7 @@ RSpec.describe InvoicesController, type: :request do
     end
 
     context 'as a subscribed user' do
-      before { sign_in user_subscribed }
+      before { sign_in user }
 
       it 'serves an invoice PDF' do
         expect(subject).to have_http_status(:success)

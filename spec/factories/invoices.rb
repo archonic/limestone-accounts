@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :invoice do
-    association :user
+    association :account
     stripe_id 'asdf'
     amount 900
     currency 'usd'
@@ -18,27 +18,29 @@ FactoryBot.define do
         "metadata": {},
         "period": {
           "start": 1517179826,
-          "end": 1518389426},
-          "plan": {
-            "id": "example-plan-id",
-            "object": "plan",
-            "amount": 1500,
-            "created": 1517179573,
-            "currency": "usd",
-            "interval": "month",
-            "interval_count": 1,
-            "livemode": false,
-            "metadata": {},
-            "name": "Pro",
-            "statement_descriptor": nil,
-            "trial_period_days": 14
-          },
-          "proration": false,
-          "quantity": 1,
-          "subscription": nil,
-          "subscription_item": "si_00000000000000",
-          "type": "subscription"
-        }
-      ]
+          "end": 1518389426
+        },
+        "plan": {
+          "id": "example-plan-id",
+          "object": "plan",
+          "amount": 1500,
+          "created": 1517179573,
+          "currency": "usd",
+          "interval": "month",
+          "interval_count": 1,
+          "livemode": false,
+          "metadata": {},
+          "name": "Pro",
+          "statement_descriptor": nil,
+          "trial_period_days": 14
+        },
+        "proration": false,
+        "quantity": 1,
+        "subscription": nil,
+        "subscription_item": "si_00000000000000",
+        "type": "subscription"
+      }
+    ]
+    initialize_with { Invoice.where(stripe_id: 'asdf').first_or_initialize }
   end
 end

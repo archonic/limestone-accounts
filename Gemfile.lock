@@ -146,9 +146,10 @@ GEM
     factory_bot_rails (4.8.2)
       factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
+    faker (1.8.7)
+      i18n (>= 0.7)
     faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
-    ffaker (2.7.0)
     ffi (1.9.18)
     flipper (0.12.2)
     flipper-redis (0.12.2)
@@ -436,7 +437,7 @@ DEPENDENCIES
   devise (~> 4)
   discard
   factory_bot_rails (~> 4.8)
-  ffaker (~> 2.7)
+  faker (~> 1.8)
   flipper
   flipper-redis
   flipper-ui

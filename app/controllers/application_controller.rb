@@ -38,8 +38,8 @@ class ApplicationController < ActionController::Base
 
   # Redirect users in accounts in bad standing to billing page
   def check_access
-    if current_account && !current_account.accessible?
-      redirect_to billing_path, flash: { error: 'Your access has been removed. Please update your card. Access will be restored once payment succeeds.' }
+    if current_account && current_account.inactive?
+      redirect_to billing_path, flash: { error: 'Your account is inactive. Access will be restored once payment succeeds.' }
     end
   end
 end

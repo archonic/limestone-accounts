@@ -1,4 +1,3 @@
--# NOTE collapse behaviour in BS4 is less than ideal. Navbar collapsing will be revisited after 4.0 launches.
 %nav.navbar.navbar-expand-sm.navbar-light.bg-light.navbar-fixed-top
   = link_to 'Brand', '/', class: 'navbar-brand'
   %button.navbar-toggler{type: 'button', data: { toggle: 'collapse', target:'#nav_loggedin' }}
@@ -16,7 +15,7 @@
           - if current_user.super_admin?
             = link_to 'Admin', admin_root_path, class: 'dropdown-item'
           - else
-            = current_user.subscribed? ? link_to('Billing', billing_path, class: 'dropdown-item') : link_to('Subscribe ', subscribe_path, class: 'dropdown-item')
+            = current_account.subscribed? ? link_to('Billing', billing_path, class: 'dropdown-item') : link_to('Subscribe ', subscribe_path, class: 'dropdown-item')
           .dropdown-divider
           = link_to "Stop Impersonating", admin_stop_impersonating_path, class: 'dropdown-item' if current_user != true_user
           = link_to 'Sign out', main_app.destroy_user_session_path, class: 'dropdown-item'

@@ -1,7 +1,7 @@
 # Manages all calls to Stripe pertaining to subscriptions
 class SubscriptionService
-  def initialize(current_user, params)
-    @user = current_user
+  def initialize(current_account, params)
+    @account = current_account
     @params = params
   end
 
@@ -20,35 +20,34 @@ class SubscriptionService
     end
     return false if subscription.nil?
 
-    user_attributes_to_update = {
-      stripe_id: customer.id,
+    account_attributes_to_update = {
+      stripe_customer_id: customer.id,
       stripe_subscription_id: subscription.id
     }
 
     # Only update the card on file if we're adding a new one
-    # Limestone doesn't use this because we don't ask for a card upon registration
-    # but you could add the card form to the registration form
-    user_attributes_to_update.merge!(
+    # TODO remove this if unused
+    account_attributes_to_update.merge!(
       card_last4: @params[:card_last4],
       card_exp_month: @params[:card_exp_month],
       card_exp_year: @params[:card_exp_year],
       card_type: @params[:card_brand]
     ) if @params[:card_last4]
 
-    @user.update(user_attributes_to_update)
+    @account.update(account_attributes_to_update)
   end
 
   # Fires when users subscribe (/subscribe), update their card (/billing) and switch plans.
   def update_subscription
     success = stripe_call do
-      customer = Stripe::Customer.retrieve(@user.stripe_id)
-      subscription = customer.subscriptions.retrieve(@user.stripe_subscription_id)
+      customer = Stripe::Customer.retrieve(@account.stripe_customer_id)
+      subscription = customer.subscriptions.retrieve(@account.stripe_subscription_id)
       subscription.source = @params[:stripeToken] if @params[:stripeToken]
       # Update plan if one is provided, otherwise use user's existing plan
       plan_stripe_id = if @params[:plan_id]
         Plan.find(@params[:plan_id]).stripe_id
       else
-        @user.plan.stripe_id
+        @account.plan.stripe_id
       end
       subscription.items = [{
         id: subscription.items.data[0].id,
@@ -57,36 +56,36 @@ class SubscriptionService
       subscription.save
     end
     return false unless success
-    user_attributes_to_update = {}
+    account_attributes_to_update = {}
     # This is updated by the stripe webhook customer.updated
     # But we can update it here for a faster optimistic 'response'
-    user_attributes_to_update.merge!(
+    account_attributes_to_update.merge!(
       card_last4: @params[:card_last4],
       card_exp_month: @params[:card_exp_month],
       card_exp_year: @params[:card_exp_year],
       card_type: @params[:card_brand]
     ) if @params[:card_last4] && @params[:stripeToken]
-    user_attributes_to_update.merge!(
+    account_attributes_to_update.merge!(
       plan_id: @params[:plan_id].to_i
     ) if @params[:plan_id]
-    @user.update(user_attributes_to_update) if user_attributes_to_update.any?
+    @account.update(account_attributes_to_update) if account_attributes_to_update.any?
     return true if success
   end
 
   def destroy_subscription
     stripe_call do
-      customer.subscriptions.retrieve(@user.stripe_subscription_id).delete
-      @user.update(stripe_subscription_id: nil)
+      customer.subscriptions.retrieve(@account.stripe_subscription_id).delete
+      @account.update(stripe_subscription_id: nil)
     end
   end
 
   private
 
   def customer
-    @customer ||= if @user.stripe_id?
-      Stripe::Customer.retrieve(@user.stripe_id)
+    @customer ||= if @account.stripe_customer_id?
+      Stripe::Customer.retrieve(@account.stripe_customer_id)
     else
-      Stripe::Customer.create(email: @user.email)
+      Stripe::Customer.create(email: @account.owner.email)
     end
   end
 

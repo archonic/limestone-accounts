@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2018_02_24_000415) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "name", null: false
-    t.string "subdomain", limit: 30, null: false
+    t.string "subdomain", limit: 40, null: false
     t.integer "plan_id"
     t.string "stripe_customer_id"
     t.string "stripe_subscription_id"
@@ -124,7 +124,8 @@ ActiveRecord::Schema.define(version: 2018_02_24_000415) do
   create_table "plans", force: :cascade do |t|
     t.string "name", null: false
     t.integer "amount", null: false
-    t.string "associated_role", null: false
+    t.string "currency", null: false
+    t.string "interval", null: false
     t.string "stripe_id"
     t.boolean "active", null: false, default: true
   end

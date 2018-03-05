@@ -2,14 +2,14 @@
   .col-md
     %h3 Billing
     -# Any user who can see this page should have a card_last4 populated by stripe webhook UpdateCustomer
-    - if current_user.card_last4.present?
+    - if current_account.card_last4.present?
       %p Your card on file is:
       %p
-        = "#{current_user.card_type} **** **** **** #{current_user.card_last4}"
+        = "#{current_account.card_type} **** **** **** #{current_account.card_last4}"
         %br
-        = "Expires #{current_user.card_exp_month} / #{current_user.card_exp_year}"
+        = "Expires #{current_account.card_exp_month} / #{current_account.card_exp_year}"
     .form-group
-      %button.btn{class: "#{current_user.past_due? ? 'btn-danger' : 'btn-outline-secondary'}", type: 'button', 'data-toggle': 'collapse', 'data-target': '#new_card'}
+      %button.btn{class: "#{current_account.past_due? ? 'btn-danger' : 'btn-outline-secondary'}", type: 'button', 'data-toggle': 'collapse', 'data-target': '#new_card'}
         Update your card
     #new_card.collapse
       = render 'card_form', locals: { path: subscriptions_path, method: 'patch' }
@@ -17,18 +17,18 @@
   .col-md
     %h3 Plan
     .form-group
-      = "You are currently on the #{current_user.plan_name} plan."
-      = render 'plan_switch_form', locals: { current_plan_id: current_user.plan_id }
-      = "Your role is #{current_user.role}."
+      = "You are currently on the #{current_account.plan_name} plan."
+      = render 'plan_switch_form', locals: { current_plan_id: current_account.plan_id }
+      = "Your roles are #{current_accounts_user.roles}."
 
-  - if current_user.subscribed?
+  - if current_account.subscribed?
     .col-md
       %h3 Next Payment
       %p
         Your card will be charged
         %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching', style: 'color: blue;' }
-          = current_user.cost
-        = "on #{current_user.current_period_end.strftime('%A, %B %e, %Y')}."
+          = current_account.cost
+        = "on #{current_account.current_period_end.strftime('%A, %B %e, %Y')}."
 
 %hr
 %h3 Your Invoices
@@ -42,8 +42,8 @@
       %th{scope: 'col'}Amount
       %th{scope: 'col'}PDF
   %tbody
-    - if current_user.invoices.any?
-      - current_user.invoices.each_with_index do |invoice, index|
+    - if current_account.invoices.any?
+      - current_account.invoices.each_with_index do |invoice, index|
         %tr
           %th{scope: 'row'}= index
           %td= invoice.created_at.strftime("%B %d, %Y")

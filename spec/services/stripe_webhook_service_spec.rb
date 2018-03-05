@@ -5,12 +5,16 @@ RSpec.describe StripeWebhookService, type: :service do
   let(:stripe_helper) { StripeMock.create_test_helper }
   before do
     StripeMock.start
-    stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, trial_period_days: $trial_period_days)
+    stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, currency: 'usd', trial_period_days: $trial_period_days)
+    au_subscribed.add_role :admin
   end
-  let(:mock_customer) { Stripe::Customer.create }
-  let(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
-  let!(:user_subscribed) { create(:user, :subscribed, stripe_id: mock_customer.id, stripe_subscription_id: mock_subscription.id) }
   after { StripeMock.stop }
+
+  let!(:au_subscribed) { create(:accounts_user, :subscribed) }
+  let(:account_subscribed) { au_subscribed.account }
+  let(:user_subscribed) { au_subscribed.user }
+  let(:mock_customer) { Stripe::Customer.create }
+  let!(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
 
   describe StripeWebhookService::RecordInvoicePaid do
     let(:event_no_customer) { StripeMock.mock_webhook_event('invoice.payment_succeeded') }
@@ -21,7 +25,7 @@ RSpec.describe StripeWebhookService, type: :service do
     end
 
     it 'logs failure to find user when no valid customer' do
-      expect(StripeLogger).to receive(:error).once.with(/No user found with stripe_id/)
+      expect(StripeLogger).to receive(:error).once.with(/No account found with stripe_customer_id/)
       StripeWebhookService::RecordInvoicePaid.new.call(event_no_customer)
     end
 
@@ -81,7 +85,7 @@ RSpec.describe StripeWebhookService, type: :service do
     context 'without valid customer' do
       let(:event_no_customer) { StripeMock.mock_webhook_event('customer.updated') }
       it 'logs failure to find user when no valid customer' do
-        expect(StripeLogger).to receive(:error).once.with(/No user found with stripe_id/)
+        expect(StripeLogger).to receive(:error).once.with(/No account found with stripe_customer_id/)
         StripeWebhookService::UpdateCustomer.new.call(event_no_customer)
       end
     end
@@ -142,15 +146,14 @@ RSpec.describe StripeWebhookService, type: :service do
       end
 
       it 'updates and commits user attributes appropriately' do
-        expect(User).to receive(:find_by).with(stripe_id: event_zero_sources.data.object.id).and_return(user_subscribed)
+        expect(Account).to receive(:find_by).with(stripe_customer_id: event_zero_sources.data.object.id).and_return(account_subscribed)
         subscription = event_zero_sources.data.object.subscriptions.first
-        expect(user_subscribed).to receive(:assign_attributes).once.with(
-          role: 'basic',
+        expect(account_subscribed).to receive(:assign_attributes).once.with(
+          plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
           trialing: true,
-          past_due: false,
           current_period_end: Time.at(subscription.current_period_end).to_datetime
         )
-        expect(user_subscribed).to receive(:save).once.and_return(true)
+        expect(account_subscribed).to receive(:save).once.and_return(true)
         subject
       end
 
@@ -164,7 +167,7 @@ RSpec.describe StripeWebhookService, type: :service do
       end
     end
 
-    # Happens when a trial user subscribes when a normal user or updates their card
+    # Happens when a trial user subscribes and when a normal user updates their card
     context 'with source and subscription in payload' do
       let(:billing_updated_dbl) { double(ActionMailer::MessageDelivery) }
       it 'does not error' do
@@ -174,18 +177,17 @@ RSpec.describe StripeWebhookService, type: :service do
 
       context 'with subscription.status trailing' do
         it 'updates and commits user attributes appropriately' do
-          expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-          expect(user_subscribed).to receive(:assign_attributes).once.with(
+          expect(Account).to receive(:find_by).with(stripe_customer_id: event_customer.data.object.id).and_return(account_subscribed)
+          expect(account_subscribed).to receive(:assign_attributes).once.with(
             card_last4: @source.last4,
             card_type: @source.brand,
             card_exp_month: @source.exp_month,
             card_exp_year: @source.exp_year,
-            role: 'basic',
-            past_due: false,
+            plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             trialing: true,
             current_period_end: Time.at(@subscription.current_period_end).to_datetime
           )
-          expect(user_subscribed).to receive(:save).once.and_return(true)
+          expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
         end
 
@@ -202,42 +204,22 @@ RSpec.describe StripeWebhookService, type: :service do
         before { @subscription.status = 'active' }
         after { @subscription.status = 'trialing' }
 
-        context 'on basic plan' do
-          it 'updates and commits user attributes appropriately' do
-            expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-            expect(user_subscribed).to receive(:assign_attributes).once.with(
-              card_last4: @source.last4,
-              card_type: @source.brand,
-              card_exp_month: @source.exp_month,
-              card_exp_year: @source.exp_year,
-              role: 'basic',
-              past_due: false,
-              trialing: false,
-              current_period_end: Time.at(@subscription.current_period_end).to_datetime
-            )
-            expect(user_subscribed).to receive(:save).once.and_return(true)
-            subject
-          end
-        end
-
-        context 'on pro plan' do
-          before { Plan.find(user_subscribed.plan_id).update(associated_role: 'pro') }
-          after  { Plan.find(user_subscribed.plan_id).update(associated_role: 'basic') }
-          it 'updates and commits user attributes appropriately' do
-            expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-            expect(user_subscribed).to receive(:assign_attributes).once.with(
-              card_last4: @source.last4,
-              card_type: @source.brand,
-              card_exp_month: @source.exp_month,
-              card_exp_year: @source.exp_year,
-              role: 'pro',
-              past_due: false,
-              trialing: false,
-              current_period_end: Time.at(@subscription.current_period_end).to_datetime
-            )
-            expect(user_subscribed).to receive(:save).once.and_return(true)
-            subject
-          end
+        it 'updates and commits user attributes appropriately' do
+          expect(Account).to receive(:find_by).with(stripe_customer_id: event_customer.data.object.id).and_return(account_subscribed)
+          expect(account_subscribed).to receive(:assign_attributes).once.with(
+            card_last4: @source.last4,
+            card_type: @source.brand,
+            card_exp_month: @source.exp_month,
+            card_exp_year: @source.exp_year,
+            plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
+            trialing: false,
+            past_due: false,
+            unpaid: false,
+            cancelled: false,
+            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+          )
+          expect(account_subscribed).to receive(:save).once.and_return(true)
+          subject
         end
       end
 
@@ -246,17 +228,17 @@ RSpec.describe StripeWebhookService, type: :service do
         after  { @subscription.status = 'trialing' }
 
         it 'updates and commits user attributes appropriately' do
-          expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-          expect(user_subscribed).to receive(:assign_attributes).once.with(
+          expect(Account).to receive(:find_by).with(stripe_customer_id: event_customer.data.object.id).and_return(account_subscribed)
+          expect(account_subscribed).to receive(:assign_attributes).once.with(
             card_last4: @source.last4,
             card_type: @source.brand,
             card_exp_month: @source.exp_month,
             card_exp_year: @source.exp_year,
-            role: 'basic',
+            plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             past_due: true,
             current_period_end: Time.at(@subscription.current_period_end).to_datetime
           )
-          expect(user_subscribed).to receive(:save).once.and_return(true)
+          expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
         end
       end
@@ -266,16 +248,17 @@ RSpec.describe StripeWebhookService, type: :service do
         after  { @subscription.status = 'trialing' }
 
         it 'updates and commits user attributes appropriately' do
-          expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-          expect(user_subscribed).to receive(:assign_attributes).once.with(
+          expect(Account).to receive(:find_by).with(stripe_customer_id: event_customer.data.object.id).and_return(account_subscribed)
+          expect(account_subscribed).to receive(:assign_attributes).once.with(
             card_last4: @source.last4,
             card_type: @source.brand,
             card_exp_month: @source.exp_month,
             card_exp_year: @source.exp_year,
-            role: 'removed',
+            unpaid: true,
+            plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             current_period_end: Time.at(@subscription.current_period_end).to_datetime
           )
-          expect(user_subscribed).to receive(:save).once.and_return(true)
+          expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
         end
       end
@@ -285,16 +268,17 @@ RSpec.describe StripeWebhookService, type: :service do
         after  { @subscription.status = 'trialing' }
 
         it 'updates and commits user attributes appropriately' do
-          expect(User).to receive(:find_by).with(stripe_id: event_customer.data.object.id).and_return(user_subscribed)
-          expect(user_subscribed).to receive(:assign_attributes).once.with(
+          expect(Account).to receive(:find_by).with(stripe_customer_id: event_customer.data.object.id).and_return(account_subscribed)
+          expect(account_subscribed).to receive(:assign_attributes).once.with(
             card_last4: @source.last4,
             card_type: @source.brand,
             card_exp_month: @source.exp_month,
             card_exp_year: @source.exp_year,
-            role: 'removed',
+            cancelled: true,
+            plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             current_period_end: Time.at(@subscription.current_period_end).to_datetime
           )
-          expect(user_subscribed).to receive(:save).once.and_return(true)
+          expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
         end
       end
@@ -318,14 +302,16 @@ RSpec.describe StripeWebhookService, type: :service do
     end
 
     it 'updates and commits user attributes appropriately' do
-      expect(User).to receive(:find_by).with(stripe_id: event_update_subscription.data.object.customer).and_return(user_subscribed)
-      expect(user_subscribed).to receive(:assign_attributes).once.with(
-        role: 'basic',
-        past_due: false,
+      expect(Account).to receive(:find_by).with(stripe_customer_id: event_update_subscription.data.object.customer).and_return(account_subscribed)
+      expect(account_subscribed).to receive(:assign_attributes).once.with(
         trialing: false,
+        past_due: false,
+        unpaid: false,
+        cancelled: false,
+        plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
         current_period_end: Time.at(@subscription.current_period_end).to_datetime
       )
-      expect(user_subscribed).to receive(:save).once.and_return(true)
+      expect(account_subscribed).to receive(:save).once.and_return(true)
       subject
     end
   end

@@ -4,4 +4,6 @@ class AccountsUser < ApplicationRecord
   belongs_to :user
 
   scope :admins, -> { AccountsUser.with_role :admin }
+
+  delegate :email, to: :user
 end

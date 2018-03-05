@@ -10,7 +10,7 @@ class AccountsController < ApplicationController
   def new
     @plans = Plan.active.order(:amount)
     @account = Account.new
-    @account.build_owner.user = current_user
+    @account.build_au_owner.user = current_user
     @minimum_password_length = Devise.password_length.min
   end
 

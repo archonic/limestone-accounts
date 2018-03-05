@@ -37,7 +37,7 @@ Apartment.configure do |config|
   # config.persistent_schemas = %w{ hstore }
 end
 
-Apartment::Elevators::Subdomain.excluded_subdomains = %w( www app admin secure public ).freeze
+Apartment::Elevators::Subdomain.excluded_subdomains = %w( www app admin secure public mail pop smtp ssl sftp ).freeze
 
 # Rails.application.config.middleware.use Apartment::Elevators::Domain
 Rails.application.config.middleware.use Apartment::Elevators::Subdomain

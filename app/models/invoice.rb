@@ -17,7 +17,7 @@ class Invoice < ActiveRecord::Base
       },
       line_items: [
         ["Date",           formatted_invoice_date],
-        ["Account Billed", "#{user.full_name} (#{user.email})"],
+        ["Account Owner", "#{account.owner.try(:full_name)} (#{account.owner.try(:email)})"],
         ["Product",        "Example Product"],
         ["Amount",         formatted_amount],
         ["Charged to",     formatted_card]
@@ -26,10 +26,10 @@ class Invoice < ActiveRecord::Base
   end
 
   # This assumes that the card charged is the one currently on file
-  # That will always be the case unless the user manages to change their card
-  # and get invoiced before the stripe webhook updates their user account (super unlikely).
+  # That will always be the case unless the account manages to change their card
+  # and get invoiced before the stripe webhook updates their account (super unlikely).
   def formatted_card
-    "#{user.card_type} (**** **** **** #{user.card_last4})"
+    "#{account.card_type} (**** **** **** #{account.card_last4})"
   end
 
   def formatted_invoice_date

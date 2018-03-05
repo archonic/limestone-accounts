@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe Role, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  # No tests yet since we're not doing anything special in role model.
 end

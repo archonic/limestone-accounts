@@ -1,9 +1,19 @@
 class Account < ActiveRecord::Base
   has_many :accounts_users
   has_many :users, through: :accounts_users
+  has_many :invoices
   has_one :owner, -> { AccountsUser.admins.order(:id) }, class_name: 'AccountsUser'
   # set optional: true if you don't want the default Rails 5 belongs_to presence validation
   belongs_to :plan
+
+  validates :name,
+    length: { in: 2..40 }
+
+  validates :subdomain,
+    length: { in: 2..40 },
+    uniqueness: true,
+    format: { with: /\A[a-zA-Z0-9\-]+\Z/i, message: 'accepts only letters, numbers and a dash.' },
+    if: :subdomain_changed?
 
   delegate :cost, to: :plan
   delegate :name, to: :plan, prefix: true
@@ -22,9 +32,16 @@ class Account < ActiveRecord::Base
     current_period_end < Time.current
   end
 
-  # true if account is in good standing
-  def accessible?
-    !cancelled || !unpaid
+  def inactive?
+    cancelled || unpaid
+  end
+
+  def active?
+    !inactive?
+  end
+
+  def flipper_id
+    "Account;#{id}"
   end
 
   private

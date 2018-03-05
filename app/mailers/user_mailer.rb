@@ -1,16 +1,18 @@
 class UserMailer < ApplicationMailer
   include Rails.application.routes.url_helpers
 
-  def welcome_email(user)
+  def welcome_email(user, account)
     @user = user
+    @account = account
     mail(
       to: email_with_name(user),
       subject: '[Limestone] Welcome!'
     )
   end
 
-  def billing_updated(user)
+  def billing_updated(user, account)
     @user = user
+    @account = account
     mail(
       to: email_with_name(user),
       subject: '[Limestone] Billing Updated'

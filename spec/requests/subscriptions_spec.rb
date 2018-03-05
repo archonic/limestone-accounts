@@ -5,24 +5,17 @@ RSpec.describe SubscriptionsController, type: :request do
   let(:stripe_helper) { StripeMock.create_test_helper }
   before do
     StripeMock.start
-    stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, trial_period_days: $trial_period_days)
+    stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, currency: 'usd', trial_period_days: $trial_period_days)
   end
   after { StripeMock.stop }
-  let(:mock_customer) { Stripe::Customer.create }
-  let(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
-  let(:user_trial) { create(:user, :trialing) }
-  let(:user_subscribed) {
-    create(
-      :user,
-      :subscribed,
-      stripe_id: mock_customer.id,
-      stripe_subscription_id: mock_subscription.id,
-      card_last4: '4242',
-      card_exp_month: 12,
-      card_exp_year: 2025,
-      card_type: 'Visa'
-    )
-  }
+
+  let!(:au_trialing) { create(:accounts_user) }
+  let(:account_trialing) { au_trialing.account }
+  let(:user_trialing) { au_trialing.user }
+
+  let!(:au_subscribed) { create(:accounts_user, :subscribed) }
+  let(:account_subscribed) { au_subscribed.account }
+  let(:user_subscribed) { au_subscribed.user }
 
   describe 'GET billing_path' do
     subject do
@@ -31,7 +24,10 @@ RSpec.describe SubscriptionsController, type: :request do
     end
 
     context 'as a trial user' do
-      before { sign_in user_trial }
+      before do
+        host! "#{account_trialing.subdomain}.lvh.me"
+        sign_in user_trialing
+      end
 
       it 'redirects to subscribe page' do
         expect(subject).to redirect_to subscribe_path
@@ -39,18 +35,21 @@ RSpec.describe SubscriptionsController, type: :request do
     end
 
     context 'as a subscribed user' do
-      before { sign_in user_subscribed }
+      before do
+        host! "#{account_subscribed.subdomain}.lvh.me"
+        sign_in user_subscribed
+      end
 
       it 'shows card on file' do
         expect(subject).to have_http_status(:success)
-        expect(subject.body).to include 'Visa **** **** **** 4242'
-        expect(subject.body).to include 'Expires 12 / 2025'
+        expect(subject.body).to include 'Visa **** **** **** 1234'
+        expect(subject.body).to include 'Expires 2 / 2025'
       end
 
       it 'shows next payment' do
         expect(subject.body).to include 'Your card will be charged'
-        expect(subject.body).to include user_subscribed.plan.cost
-        expect(subject.body).to include "on #{user_subscribed.current_period_end.strftime('%A, %B %e, %Y')}"
+        expect(subject.body).to include account_subscribed.cost
+        expect(subject.body).to include "on #{account_subscribed.current_period_end.strftime('%A, %B %e, %Y')}"
       end
     end
   end
@@ -67,8 +66,11 @@ RSpec.describe SubscriptionsController, type: :request do
       response
     end
 
-    context 'as a not subscribed user' do
-      before { sign_in user_trial }
+    context 'as a trialing user' do
+      before do
+        host! "#{account_trialing.subdomain}.lvh.me"
+        sign_in user_trialing
+      end
       it 'redirects to root with access denied' do
         expect(StripeLogger).to receive(:error).once.with('Invalid parameters were supplied to Stripe\'s API.')
         expect(subject).to redirect_to subscribe_path
@@ -77,7 +79,13 @@ RSpec.describe SubscriptionsController, type: :request do
     end
 
     context 'as a subscribed user' do
-      before { sign_in user_subscribed }
+      let(:mock_customer) { Stripe::Customer.create }
+      let!(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
+
+      before do
+        host! "#{account_subscribed.subdomain}.lvh.me"
+        sign_in user_subscribed
+      end
 
       context 'with good params' do
         it 'updates the existing subscription' do

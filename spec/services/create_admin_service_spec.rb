@@ -7,7 +7,10 @@ RSpec.describe CreateAdminService, type: :service do
   after { StripeMock.stop }
 
   describe '#call' do
-    before { create(:plan) }
+    before do
+      create(:plan)
+      create(:account, subdomain: 'limestone')
+    end
 
     it 'creates the admin' do
       expect(User.count).to eq 0

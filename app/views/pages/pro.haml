@@ -1,10 +1,4 @@
 %h1 Welcome to the coveted Pro Page!
 
 %p
-  You can only see this page if you have the
-  %code pro
-  role. The only way to get the pro role is if a Stripe webhook (
-  %code> customer.subscription.updated
-  ) reports that the customer subscription has been updated and has the plan which has the
-  %code pro
-  associated_role. Neat, right?
+  You can only see this page if you belong to an account on the Pro plan. You can only be on the Pro plan if the call to Stripe succeeds and the webhook comes back to assign your account to the Pro plan. Neat, right?

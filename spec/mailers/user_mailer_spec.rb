@@ -1,17 +1,19 @@
 require "rails_helper"
 
 RSpec.describe UserMailer, type: :mailer do
-  let(:user) { create(:user) }
+  let!(:au) { create(:accounts_user) }
+  let(:account) { au.account }
+  let(:user) { au.user }
 
   describe 'welcome_email' do
-    let(:mail) { UserMailer.welcome_email(user) }
+    let(:mail) { UserMailer.welcome_email(user, account) }
     it 'renders' do
       expect(mail.body).to match 'Welcome'
     end
   end
 
   describe 'billing_updated' do
-    let(:mail) { UserMailer.billing_updated(user) }
+    let(:mail) { UserMailer.billing_updated(user, account) }
     it 'renders' do
       expect(mail.body).to match 'Your billing information has been updated'
     end
