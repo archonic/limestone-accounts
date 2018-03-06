@@ -44,7 +44,8 @@ gem 'haml', '~> 5'
 gem 'simple_form'
 
 # Multi-tennancy
-gem 'apartment', '~> 2.1'
+# Temporary hold over until this is solved: https://github.com/influitive/apartment/issues/518
+gem 'apartment', github: 'archonic/apartment', branch: 'development'
 
 # Authentication
 gem 'devise', '~> 4'
