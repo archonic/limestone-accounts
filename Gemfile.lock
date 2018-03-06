@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/archonic/apartment.git
-  revision: e1bd2731ac312253bc6b475cf277ad6443d9b45f
+  revision: 97c8e9d08b762db3d76ec2857795bd4dabea3e2e
   branch: development
   specs:
     apartment (2.1.0)
