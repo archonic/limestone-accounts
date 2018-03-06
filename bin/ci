@@ -5,7 +5,14 @@ set -e
 bin/wait-for-postgres
 
 time bundle exec rake db:create
-time bundle exec rake db:migrate
-time bundle exec rake db:seed
+
+# Can't use this until apartment fixes https://github.com/influitive/apartment/issues/518
+# time bundle exec rake db:setup
+
+# Not needed
+# time bundle exec rake db:migrate
+
+# Can't use this til apartment fixes https://github.com/influitive/apartment/issues/531
+# time bundle exec rake db:seed
 
 time bundle exec rspec $2
