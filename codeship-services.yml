@@ -1,6 +1,6 @@
 web:
   build: ./
-  links:
+  depends_on:
     - postgres
     - redis
   encrypted_env_file: .env.encrypted
