@@ -42,7 +42,7 @@ services:
     build: .
     env_file:
       - '.env'
-    command: ./bin/webpack-dev-server --inline true
+    command: ./bin/webpack-dev-server
     volumes:
       - '.:/app'
     ports:
