@@ -9,7 +9,7 @@ RSpec.describe CreatePlanService, type: :service do
     StripeMock.start
   end
   after do
-    Rails.stub(env: ActiveSupport::StringInquirer.new('test'))
+    allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('test'))
     StripeMock.stop
   end
 
