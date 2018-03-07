@@ -22,7 +22,7 @@ gem 'sass-rails', '~> 5'
 gem 'uglifier', '>= 1.3.0'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker'
+gem 'webpacker', '~> 3.3.0'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
