@@ -37,12 +37,10 @@ services:
       - '.env'
 
   webpacker:
-    depends_on:
-      - 'postgres'
     build: .
     env_file:
       - '.env'
-    command: ./bin/webpack-dev-server
+    command: ./bin/webpack-dev-server --inline true
     volumes:
       - '.:/app'
     ports:
