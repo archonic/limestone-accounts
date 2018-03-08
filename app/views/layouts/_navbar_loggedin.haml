@@ -5,13 +5,13 @@
   #nav_loggedin.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
       %li.nav-item= link_to 'Dashboard', dashboard_path, class: 'nav-link'
-      - if current_accounts_user.has_role? :pro
-        %li.nav-item= link_to 'Pro Page', pro_path, class: 'nav-link'
+      - if current_accounts_user.has_role? :admin
+        %li.nav-item= link_to 'Account', account_path, class: 'nav-link'
     %ul.navbar-nav.ml-auto
       .li.nav-item.dropdown
         = link_to avatar(current_user, :sm), '#', {class: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': true, 'aria-expanded': false}
         .dropdown-menu.dropdown-menu-right
-          = link_to 'Account', edit_user_registration_path, class: 'dropdown-item'
+          = link_to 'Profile', edit_user_registration_path, class: 'dropdown-item'
           - if current_user.super_admin?
             = link_to 'Admin', admin_root_path, class: 'dropdown-item'
           - else

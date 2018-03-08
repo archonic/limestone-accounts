@@ -1,9 +1,8 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:edit, :update, :destroy]
+  before_action :set_account, only: [:show, :edit, :update, :destroy]
 
-  # GET /accounts
-  def index
-    @accounts = Account.find_each
+  # GET /account
+  def show
   end
 
   # GET /accounts/new
@@ -33,6 +32,6 @@ class AccountsController < ApplicationController
   private
 
     def set_account
-      @account = Account.find(params[:id])
+      @account = current_account
     end
 end

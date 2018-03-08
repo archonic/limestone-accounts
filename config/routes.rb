@@ -37,15 +37,23 @@ Rails.application.routes.draw do
     get 'cancelled', to: 'pages#cancelled'
   end
 
-  # Account registration / management
-  # TODO separate into unauthenticated/authenticated
-  resources :accounts
+  # Account registration
+  post 'account', to: 'accounts#create'
+  get 'account/new', to: 'accounts#new'
 
   # Signed in pages
   authenticated :user do
     constraints Subdomain do
       root to: 'dashboard#show', as: 'dashboard'
-      get 'pro', to: 'pages#pro'
+
+      # Account management
+      get 'account/edit', to: 'accounts#edit'
+      get 'account', to: 'accounts#show', as: 'account_show'
+      patch 'account', to: 'accounts#update', as: 'account_update'
+      delete 'account', to: 'accounts#destroy', as: 'account_destroy'
+
+      # Members management
+      # get 'members/new', to: 'invitations'
     end
 
     # Avatars

@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
     if subdomain
       redirect_to new_user_session_url(subdomain: subdomain)
     else
-      redirect_to :back, flash: { error: 'That workspace was not found.' }
+      redirect_to new_user_session_path, flash: { error: 'That workspace was not found.' }
     end
   end
 end
