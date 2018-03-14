@@ -49,6 +49,7 @@ gem 'apartment', github: 'archonic/apartment', branch: 'development'
 
 # Authentication
 gem 'devise', '~> 4'
+gem 'devise_invitable', '~> 1.7'
 # Authorization
 gem 'pundit', '~> 1'
 # Roles w/resource scoping
@@ -79,7 +80,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'pretender'
 
 # Search
-gem 'searchkick'
+# gem 'searchkick', '~> 3.0'
 
 # Jerbs
 gem 'sidekiq', '~> 5.0'

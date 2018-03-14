@@ -1,0 +1,26 @@
+%h1 Account
+.row
+  .col-12
+    = render 'navigation'
+    %h3.mt-3.mb-3
+      All Members
+      = link_to icon(:'envelope-o') + ' Invite New Members', new_user_invitation_path, class: 'btn btn-success pull-right'
+    %p= raw "You are the <strong>owner</strong> of this workspace" if current_account.owner_user == current_user
+
+    - if @members.any?
+      .list-group.list-group-flush
+        - @members.each do |member|
+          .list-group-item
+            .media
+              = avatar(member, :lg, {class: 'mr-3'})
+              .media-body
+                .row
+                  .col-8
+                    %h5.mt-0= member.full_name
+                    %p= member.email
+                  .col-4.text-right
+                    - user_label = current_account.owner_user == member ? 'Owner' : 'Member'
+                    .dropdown
+                      = button_tag raw(user_label), id: "dropdown_actions_#{member.id}", class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false }
+                      .dropdown-menu.dropdown-menu-right{ aria: { labelledby: "dropdown_actions_#{member.id}" } }
+                        = link_to 'Delete', '#delete', class: 'dropdown-item'

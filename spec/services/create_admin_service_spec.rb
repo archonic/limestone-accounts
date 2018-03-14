@@ -16,7 +16,11 @@ RSpec.describe CreateAdminService, type: :service do
       expect(User.count).to eq 0
       CreateAdminService.call
       expect(User.count).to eq 1
-      expect(User.first.super_admin?).to be true
+      expect(User.first.reload.super_admin?).to be true
+      Apartment::Tenant.switch('limestone') do
+        expect(User.first.accounts_users.first.reload.has_role?(:admin)).to be true
+      end
+
     end
   end
 end

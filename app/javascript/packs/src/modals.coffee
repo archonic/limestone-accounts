@@ -38,7 +38,7 @@ $ ->
     commit: 'Confirm'
     commitClass: 'btn-danger'
     cancel: 'Cancel'
-    cancelClass: 'btn-default'
+    cancelClass: 'btn-light'
     fade: true
     verifyClass: 'form-control'
     elements: [

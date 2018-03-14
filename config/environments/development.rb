@@ -68,7 +68,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # For devise
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'lvh.me', port: 3000 }
 
   # Use AWS for active storage as a default
   config.active_storage.service = :local

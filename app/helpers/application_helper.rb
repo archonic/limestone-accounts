@@ -24,4 +24,8 @@ module ApplicationHelper
   def devise_mapping
     @devise_mapping ||= Devise.mappings[:user]
   end
+
+  def active_class(path)
+    current_page?(path) ? ' active' : ''
+  end
 end

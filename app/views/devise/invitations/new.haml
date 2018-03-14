@@ -1,0 +1,11 @@
+.row.justify-content-md-center
+  .col-md-5
+    %h2= t('devise.invitations.new.header', account_name: current_account.name)
+    = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post} do |f|
+      = devise_error_messages!
+      - resource.class.invite_key_fields.each do |field|
+        = f.input field, as: :text, label: 'Email Addresses', hint: 'Separate multiple addresses with commas.', input_html: { value: flash[:emails_failed].try(:join, ', '), rows: 8 }
+      .form_actions
+        = button_tag(type: 'submit', class: 'btn btn-success pull-right') do
+          = icon(:'envelope-o') + ' ' + t('devise.invitations.new.submit_button')
+        = link_to 'Cancel', account_path, class: 'btn btn-light'

@@ -9,11 +9,14 @@ class CreateAdminService
       u.last_name = ENV['ADMIN_LAST_NAME']
       u.super_admin = true
     end
+    account = Account.find_by(subdomain: 'limestone')
     admin_au = AccountsUser.find_or_create_by!(
       user_id: admin_user.id,
-      account_id: Account.find_by(subdomain: 'limestone').id
+      account_id: account.id
     )
-    admin_au.add_role :admin
+    Apartment::Tenant.switch('limestone') do
+      admin_au.add_role :admin
+    end
     admin_user
   end
 end

@@ -36,11 +36,22 @@ RSpec.describe 'Administrate Dashboards', type: :request do
 
     describe InvoiceDashboard do
       subject do
-        get admin_users_path
+        get admin_invoices_path
         response
       end
 
-      it 'allows admins to access /admin' do
+      it 'allows admins to access /admin/invoices' do
+        expect(subject).to have_http_status(:success)
+      end
+    end
+
+    describe AccountDashboard do
+      subject do
+        get admin_accounts_path
+        response
+      end
+
+      it 'allows super admins to access /admin' do
         expect(subject).to have_http_status(:success)
       end
     end
@@ -67,6 +78,17 @@ RSpec.describe 'Administrate Dashboards', type: :request do
       end
 
       it 'raises no route matches' do
+        expect{ subject }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe AccountDashboard do
+      subject do
+        get admin_accounts_path
+        response
+      end
+
+      it 'allows super admins to access /admin' do
         expect{ subject }.to raise_error(ActionController::RoutingError)
       end
     end

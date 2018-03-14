@@ -1,0 +1,10 @@
+%h1 Account
+.row
+  .col-12
+    = render 'accounts/navigation'
+%h3.mt-3.mb-3 Settings
+.row
+  .col-12
+    %h5 Cancel my account
+    %p
+      Unhappy? Contact support! But if you really want to... #{button_to 'Cancel my account', account_destroy_path, method: :delete, data: { confirm: 'Are you sure you want to cancel your account?', title: 'Cancel Account', commit: 'Yes, cancel my account', cancel: 'Just kidding' }, class: 'btn btn-danger'}

@@ -18,12 +18,20 @@ class ApplicationController < ActionController::Base
     dashboard_url(subdomain: account.subdomain)
   end
 
+  # Users hitting this method are accepting their first invitation
+  # So we can assume they want to sign into their first/only account
+  def after_accept_path_for(resource)
+    subdomain = resource.accounts.first.try(:subdomain)
+    new_user_session_path(subdomain: account.subdomain)
+  end
+
   protected
 
   def configure_permitted_parameters
     added_params = [:first_name, :last_name, :avatar, :plan_id]
     devise_parameter_sanitizer.permit :sign_up, keys: added_params
     devise_parameter_sanitizer.permit :account_update, keys: added_params
+    devise_parameter_sanitizer.permit :accept_invitation, keys: [:first_name, :last_name]
   end
 
   # Users are always allowed to manage their session, registration, subscription and account

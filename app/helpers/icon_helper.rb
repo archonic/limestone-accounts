@@ -1,7 +1,7 @@
 module IconHelper
-  AVATAR_SIZES = {xs: 16, sm: 32, md: 64, lg: 128, xl: 256}.freeze
+  AVATAR_SIZES = {xs: 9, sm: 18, md: 36, lg: 72, xl: 144}.freeze
 
-  def avatar(user, size = :sm)
+  def avatar(user, size = :sm, options = {})
     width = AVATAR_SIZES[size]
     resize_str = "#{width}x#{width}"
     img_or_text = user.avatar.attached? ? 'img' : 'text'
@@ -11,19 +11,20 @@ module IconHelper
       hash = Digest::MD5.hexdigest(user.email.try(:downcase) || 'noemail')
       "https://secure.gravatar.com/avatar/#{hash}?d=blank&s=#{width}"
     end
+    additional_classes = options[:class] || ''
     circular_icon(
       image_tag(
         image_url,
         class: 'rounded-circle'
       ) + user.full_name.initials,
       style: size.to_s,
-      class: "avatar-#{img_or_text}",
+      class: "avatar-#{img_or_text} " + additional_classes,
       alt: user.full_name
     )
   end
 
   def circular_icon(content, options = {})
-    style = options.delete(:style) || 'medium'
+    style = options.delete(:style) || 'md'
     content_tag(
       :span,
       content,

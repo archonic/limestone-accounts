@@ -1,4 +1,9 @@
 class Users::SessionsController < Devise::SessionsController
+  def new
+    binding.pry
+    flash = session.delete(:registration_flash) if session[:registration_flash]
+    super
+  end
 
   def find_workspace
     subdomain = Account.find_by(subdomain: params[:subdomain]).try(:subdomain)

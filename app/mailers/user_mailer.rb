@@ -61,6 +61,15 @@ class UserMailer < ApplicationMailer
     )
   end
 
+  def invite_to_account(user, account)
+    @user = user
+    @account = account
+    mail(
+      to: email_with_name(user),
+      subject: "[Limestone] Invitation to #{@account.name}"
+    )
+  end
+
   private
 
   def email_with_name(user)
