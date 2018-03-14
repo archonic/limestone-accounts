@@ -9,7 +9,12 @@ class PlanDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    name: Field::String
+    name: Field::String,
+    amount: Field::Number,
+    currency: Field::String,
+    interval: Field::String,
+    stripe_id: Field::String,
+    active: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -19,21 +24,32 @@ class PlanDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :id,
-    :name
+    :name,
+    :amount,
+    :currency,
+    :interval,
+    :stripe_id,
+    :active
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :id,
-    :name
+    :name,
+    :amount,
+    :currency,
+    :interval,
+    :stripe_id,
+    :active
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :name
+    :name,
+    :active
   ].freeze
 
   def display_resource(plan)

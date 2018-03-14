@@ -55,41 +55,43 @@ RSpec.describe 'Administrate Dashboards', type: :request do
         expect(subject).to have_http_status(:success)
       end
     end
+
+    describe PlanDashboard do
+      subject do
+        get admin_plans_path
+        response
+      end
+
+      it 'allows super admins to access /admin/plans' do
+        expect(subject).to have_http_status(:success)
+      end
+    end
   end
 
   context 'as user' do
     before { sign_in user }
 
     describe UserDashboard do
-      subject do
-        get admin_users_path
-        response
-      end
-
       it 'raises no route matches' do
-        expect{ subject }.to raise_error(ActionController::RoutingError)
+        expect{ get admin_users_path }.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe InvoiceDashboard do
-      subject do
-        get admin_users_path
-        response
-      end
-
       it 'raises no route matches' do
-        expect{ subject }.to raise_error(ActionController::RoutingError)
+        expect{ get admin_invoices_path }.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe AccountDashboard do
-      subject do
-        get admin_accounts_path
-        response
-      end
-
       it 'allows super admins to access /admin' do
-        expect{ subject }.to raise_error(ActionController::RoutingError)
+        expect{ get admin_accounts_path }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe PlanDashboard do
+      it 'allows super admins to access /admin' do
+        expect{ get admin_plans_path }.to raise_error(ActionController::RoutingError)
       end
     end
   end
