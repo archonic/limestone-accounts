@@ -12,7 +12,7 @@
         = link_to avatar(current_user, :md), '#', {class: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': true, 'aria-expanded': false}
         .dropdown-menu.dropdown-menu-right
           = link_to 'Profile', edit_user_registration_path, class: 'dropdown-item'
-          = link_to 'Admin', admin_root_path, class: 'dropdown-item' if current_user.super_admin?
+          = link_to 'Super Admin', admin_root_path, class: 'dropdown-item' if current_user.super_admin?
           .dropdown-divider
           = link_to "Stop Impersonating", admin_stop_impersonating_path, class: 'dropdown-item' if current_user != true_user
           = link_to 'Sign out', main_app.destroy_user_session_path, class: 'dropdown-item'

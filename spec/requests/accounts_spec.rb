@@ -1,6 +1,16 @@
 require 'rails_helper'
+require 'stripe_mock'
 
 RSpec.describe AccountsController, type: :request do
+  let(:stripe_helper) { StripeMock.create_test_helper }
+  before do
+    StripeMock.start
+    stripe_helper.create_plan(id: 'example-plan-id', name: 'Pro', amount: 1500, currency: 'usd', trial_period_days: $trial_period_days)
+    # Allow public registration before testing it
+    $flipper.enable :public_registration
+  end
+  after { StripeMock.stop }
+
   let(:email_valid) { Faker::Internet.email }
   let(:email_invalid) { 'nope' }
   let(:plan) { create(:plan) }
@@ -48,7 +58,18 @@ RSpec.describe AccountsController, type: :request do
 
       it 'assigns the role of admin to the owner' do
         subject
-        expect(Account.find_by(subdomain: 'subdomain').owner.has_role? :admin).to eq true
+        owner = Account.find_by(subdomain: 'subdomain').owner
+        expect(owner.has_role? :admin).to eq true
+      end
+
+      it 'creates the subscription in Stripe' do
+        subscription_service_dbl = double(SubscriptionService)
+        allow(SubscriptionService).to receive(:new).with(
+          an_instance_of(Account),
+          an_instance_of(Hash)
+        ).and_return(subscription_service_dbl)
+        expect(subscription_service_dbl).to receive(:create_subscription).once
+        subject
       end
     end
 

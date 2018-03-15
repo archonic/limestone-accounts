@@ -22,7 +22,6 @@ class User < ApplicationRecord
   before_save :set_full_name
 
   scope :super_admins, -> { where(super_admin: true) }
-  default_scope { order(invitation_accepted_at: :asc) }
 
   # Send mail through activejob
   def send_devise_notification(notification, *args)

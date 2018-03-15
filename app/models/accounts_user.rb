@@ -12,7 +12,7 @@ class AccountsUser < ApplicationRecord
     message: 'User already exists in this account.'
   }
 
-  scope :admins, -> { AccountsUser.with_role :admin }
+  scope :admins, -> { Apartment::Tenant.switch('public') { AccountsUser.with_role(:admin) } }
 
   delegate :email, to: :user
 end

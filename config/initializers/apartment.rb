@@ -17,6 +17,7 @@ Apartment.configure do |config|
     Account
     User
     AccountsUser
+    Role
     Plan
   )
 

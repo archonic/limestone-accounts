@@ -1,5 +1,6 @@
 class AccountsController < ApplicationController
   include ActionView::Helpers::DateHelper
+  before_action :check_public_registration, only: [:new, :create]
   before_action :set_account, only: [:show, :edit, :update, :destroy]
   before_action :setup_form, only: [:new, :create]
 
@@ -16,14 +17,16 @@ class AccountsController < ApplicationController
 
   def create
     @account = Account.new(account_create_params)
-    if @account.valid?
-      @account.save
-      UserMailer.welcome_email(@account.owner.user).deliver_later
+    if @account.save
+      UserMailer.welcome_email(@account.owner.user, @account).deliver_later
       @account.owner.add_role :admin
+      SubscriptionService.new(
+        @account,
+        { plan_id: @account.plan_id }
+      ).create_subscription
       time_left_in_trial = distance_of_time_in_words(Time.current, @account.current_period_end)
 
-      # TODO Show a success message
-      # This is hard because of how session domains work and how Devise handles `flash`
+      # TODO Show a success message. This is hard because of how session domains work and how Devise handles `flash`.
       redirect_to new_user_session_url( subdomain: @account.subdomain )
     else
       flash[:error] = 'Problem! Try again.'
@@ -31,17 +34,9 @@ class AccountsController < ApplicationController
     end
   end
 
-  # GET /account_settings
-  def edit
-  end
-
-  # PATCH /accounts/:id
-  def update
-  end
-
   # DELETE /accounts/:id
   def destroy
-    # nope nope nope
+    # TODO Cancel subscription and discard account
   end
 
   private
@@ -71,5 +66,9 @@ class AccountsController < ApplicationController
           }
         }
       )
+    end
+
+    def check_public_registration
+      redirect_to root_path, flash: { warning: 'That feature is not enabled.' } unless Flipper.enabled?(:public_registration)
     end
 end
