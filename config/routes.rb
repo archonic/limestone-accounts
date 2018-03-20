@@ -57,8 +57,8 @@ Rails.application.routes.draw do
       get 'account/edit', to: 'accounts#edit'
       get 'account', to: 'accounts#show', as: 'account_show'
       patch 'account', to: 'accounts#update', as: 'account_update'
-      delete 'account', to: 'accounts#destroy', as: 'account_destroy'
-      get 'account_settings', to: 'accounts#edit', as: 'account_settings'
+      delete 'account/cancelled', to: 'accounts#destroy', as: 'account_destroy'
+      get 'account/settings', to: 'accounts#edit', as: 'account_settings'
 
       # Members management
       # get 'members/new', to: 'invitations'

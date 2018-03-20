@@ -1,0 +1,8 @@
+%h1 Farewell :'(
+%p= "The account '#{@account.name}' was deactivated #{@account.discarded_at.try(:strftime, '%A, %B %e, %Y')}."
+
+%p
+  Contact the account owner,
+  %strong
+    = "#{@account.owner.try(:full_name)} <#{@account.owner.try(:email)}>"
+  for more information

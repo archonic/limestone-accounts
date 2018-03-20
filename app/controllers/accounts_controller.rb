@@ -12,14 +12,16 @@ class AccountsController < ApplicationController
   # GET /accounts/new
   def new
     @account = Account.new
-    @account.build_owner.user = User.new
+    @account.build_owner_au.user = User.new
   end
 
   def create
     @account = Account.new(account_create_params)
     if @account.save
-      UserMailer.welcome_email(@account.owner.user, @account).deliver_later
-      @account.owner.add_role :admin
+      UserMailer.welcome_email(@account.owner_au.user, @account).deliver_later
+      # We happen to already be on public tenant here
+      # Must use owner_au here to add role correctly
+      Apartment::Tenant.switch('public') { @account.owner_au.add_role :admin }
       SubscriptionService.new(
         @account,
         { plan_id: @account.plan_id }
@@ -36,7 +38,11 @@ class AccountsController < ApplicationController
 
   # DELETE /accounts/:id
   def destroy
-    # TODO Cancel subscription and discard account
+    return true if @account.stripe_subscription_id.nil?
+    SubscriptionService.new(
+      @account
+    ).destroy_subscription
+    @account.discard
   end
 
   private
@@ -56,7 +62,7 @@ class AccountsController < ApplicationController
         :name,
         :subdomain,
         {
-          owner_attributes: {
+          owner_au_attributes: {
             user_attributes: [
               :email,
               :first_name,

@@ -32,12 +32,14 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.boolean "cancelled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
     t.index ["cancelled"], name: "index_accounts_on_cancelled"
     t.index ["current_period_end"], name: "index_accounts_on_current_period_end"
     t.index ["name"], name: "index_accounts_on_name"
     t.index ["past_due"], name: "index_accounts_on_past_due"
     t.index ["subdomain"], name: "index_accounts_on_subdomain", unique: true
     t.index ["unpaid"], name: "index_accounts_on_unpaid"
+    t.index ["discarded_at"], name: "index_accounts_on_discarded_at"
   end
 
   create_table "accounts_users", force: :cascade do |t|
