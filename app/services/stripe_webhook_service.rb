@@ -55,7 +55,7 @@ class StripeWebhookService
         lines: lines
       )
       invoice.save
-      UserMailer.invoice_paid(account.owner.user, invoice).deliver_later
+      UserMailer.invoice_paid(account.owner_au.user, invoice).deliver_later
       return true
     end
   end
@@ -101,7 +101,7 @@ class StripeWebhookService
       end
       account.update account_attributes
       # This event is fired on new trials. Only send email if the source is present.
-      UserMailer.billing_updated(account.owner.user).deliver_later if sources.try(:total_count) == 1
+      UserMailer.billing_updated(account.owner_au.user).deliver_later if sources.try(:total_count) == 1
       return true
     end
   end
@@ -124,7 +124,7 @@ class StripeWebhookService
       event_data = event.data.object
       account = Account.find_by(stripe_customer_id: event_data.customer)
       no_account_error(self, event_data.customer) { return } if account.nil?
-      UserMailer.trial_will_end(account.owner.user).deliver_later
+      UserMailer.trial_will_end(account.owner_au.user).deliver_later
       return true
     end
   end
@@ -134,7 +134,7 @@ class StripeWebhookService
       card = event.data.object
       account = Account.find_by(stripe_customer_id: card.customer)
       no_account_error(self, card.customer) { return } if account.nil?
-      UserMailer.source_expiring(account.owner.user, card).deliver_later
+      UserMailer.source_expiring(account.owner_au.user, card).deliver_later
       return true
     end
   end
@@ -145,7 +145,7 @@ class StripeWebhookService
       account = Account.find_by(stripe_customer_id: event_data.customer)
       no_account_error(self, event_data.customer) { return } if account.nil?
       UserMailer.invoice_failed(
-        account.owner.user,
+        account.owner_au.user,
         event_data.attempt_count,
         event_data.next_payment_attempt.to_i
       ).deliver_later

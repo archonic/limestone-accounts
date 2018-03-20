@@ -9,9 +9,9 @@ RSpec.describe SubscriptionsController, type: :request do
   end
   after { StripeMock.stop }
 
-  let!(:au_trialing) { create(:accounts_user) }
-  let(:account_trialing) { au_trialing.account }
-  let(:user_trialing) { au_trialing.user }
+  let!(:au_no_sub) { create(:accounts_user) }
+  let(:account_no_sub) { au_no_sub.account }
+  let(:user_no_sub) { au_no_sub.user }
 
   let!(:au_subscribed) { create(:accounts_user, :subscribed) }
   let(:account_subscribed) { au_subscribed.account }
@@ -23,10 +23,10 @@ RSpec.describe SubscriptionsController, type: :request do
       response
     end
 
-    context 'as a trial user' do
+    context 'as an account with no subscription' do
       before do
-        host! "#{account_trialing.subdomain}.lvh.me"
-        sign_in user_trialing
+        host! "#{account_no_sub.subdomain}.lvh.me"
+        sign_in user_no_sub
       end
 
       it 'redirects to subscribe page' do
@@ -34,7 +34,7 @@ RSpec.describe SubscriptionsController, type: :request do
       end
     end
 
-    context 'as a subscribed user' do
+    context 'as a subscribed account' do
       before do
         host! "#{account_subscribed.subdomain}.lvh.me"
         sign_in user_subscribed
@@ -66,19 +66,19 @@ RSpec.describe SubscriptionsController, type: :request do
       response
     end
 
-    context 'as a trialing user' do
+    context 'as an account with no subscription' do
       before do
-        host! "#{account_trialing.subdomain}.lvh.me"
-        sign_in user_trialing
+        host! "#{account_no_sub.subdomain}.lvh.me"
+        sign_in user_no_sub
+        Apartment::Tenant.switch('public') { user_no_sub.accounts_user(account_no_sub).add_role :admin }
       end
       it 'redirects to root with access denied' do
-        expect(StripeLogger).to receive(:error).once.with('Invalid parameters were supplied to Stripe\'s API.')
         expect(subject).to redirect_to subscribe_path
         expect(flash[:error]).to match 'There was an error updating your subscription'
       end
     end
 
-    context 'as a subscribed user' do
+    context 'as a subscribed account' do
       let(:mock_customer) { Stripe::Customer.create }
       let!(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
 

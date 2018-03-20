@@ -1,7 +1,9 @@
 class Account < ActiveRecord::Base
+  include Discard::Model
+
   has_many :accounts_users, inverse_of: :account
   has_many :users, through: :accounts_users
-  has_one :owner, -> { AccountsUser.admins.order(:id) }, class_name: 'AccountsUser'
+  has_one :owner_au, -> { AccountsUser.admins.order(:id) }, class_name: 'AccountsUser'
   has_many :invoices
   # set optional: true if you don't want the default Rails 5 belongs_to presence validation
   belongs_to :plan
@@ -17,12 +19,16 @@ class Account < ActiveRecord::Base
 
   delegate :cost, to: :plan
   delegate :name, to: :plan, prefix: true
-  delegate :user, to: :owner, prefix: true
+  delegate :user, to: :owner_au, prefix: true
 
-  accepts_nested_attributes_for :owner
+  accepts_nested_attributes_for :owner_au
 
   before_create :set_current_period_end
   after_create :create_tenant
+
+  def owner
+    Apartment::Tenant.switch('public') { self.owner_au }
+  end
 
   # Only checks that they have a source, not that they're in good standing
   def subscribed?

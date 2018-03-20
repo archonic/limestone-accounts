@@ -18,7 +18,8 @@ class SubscriptionsController < ApplicationController
 
   # PATCH /subscriptions
   def update
-    if SubscriptionService.new(current_account, params).update_subscription
+    if current_account.stripe_subscription_id.present? &&
+       SubscriptionService.new(current_account, params).update_subscription
       redirect_to billing_path, flash: { success: 'Subscription updated! If this change alters your abilities, please allow a moment for us to update them.' }
     else
       redirect_to subscribe_path, flash: { error: 'There was an error updating your subscription :(' }

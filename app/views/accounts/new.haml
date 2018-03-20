@@ -7,7 +7,7 @@
   = a.input :name, label: 'Account Name', autofocus: true
   = a.input :subdomain
   %hr
-  = a.simple_fields_for :owner do |o|
+  = a.simple_fields_for :owner_au do |o|
     %h3 Admin Details
     = o.simple_fields_for :user do |u|
       = u.input :email, required: true

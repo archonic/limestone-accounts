@@ -19,7 +19,7 @@ RSpec.describe AccountsController, type: :request do
       plan_id: plan.id,
       name: 'Name',
       subdomain: 'subdomain',
-      owner_attributes: {
+      owner_au_attributes: {
         user_attributes: {
           email: email_valid,
           first_name: 'Jane',
@@ -82,6 +82,35 @@ RSpec.describe AccountsController, type: :request do
           expect(flash[:error]).to match /Problem/
         end
       end
+    end
+  end
+
+  describe '#destroy' do
+    let!(:au) { create(:accounts_user, :subscribed) }
+    let(:account) { au.account }
+    let(:user) { au.user }
+    before do
+      Apartment::Tenant.switch('public') { au.add_role :admin }
+      host! "#{account.subdomain}.lvh.me:3000"
+      sign_in user
+    end
+    subject do
+      delete account_destroy_path
+    end
+
+    it 'cancels subscription with stripe' do
+      subscription_service_dbl = double(SubscriptionService)
+      allow(SubscriptionService).to receive(:new).with(
+        account
+      ).and_return(subscription_service_dbl)
+      expect(subscription_service_dbl).to receive(:destroy_subscription).once
+      subject
+    end
+
+    it 'discards account' do
+      expect(account.discarded_at).to be_nil
+      subject
+      expect(account.reload.discarded_at).to be_present
     end
   end
 end

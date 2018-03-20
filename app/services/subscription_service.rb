@@ -1,6 +1,6 @@
 # Manages all calls to Stripe pertaining to subscriptions
 class SubscriptionService
-  def initialize(current_account, params)
+  def initialize(current_account, params = {})
     @account = current_account
     @params = params
   end
@@ -9,13 +9,15 @@ class SubscriptionService
   def create_subscription
     subscription = nil
     stripe_call do
-      plan = Stripe::Plan.list(limit: @params[:plan_id]).first
+      local_plan = Plan.active.find(@params[:plan_id])
+      return false if local_plan.nil?
+      stripe_plan = Stripe::Plan.retrieve(local_plan.stripe_id)
       # If the plan has a trial time, it does not need a stripe token to create a subscription
       # We assume you have a trial time > 0. Otherwise there will be 2 customers created for
       # each subscribed customer. One at registration and another when subscribing.
       subscription = customer.subscriptions.create(
         source: @params[:stripeToken],
-        plan: plan.id
+        plan: stripe_plan.id
       )
     end
     return false if subscription.nil?
@@ -25,22 +27,14 @@ class SubscriptionService
       stripe_subscription_id: subscription.id
     }
 
-    # Only update the card on file if we're adding a new one
-    # TODO remove this if unused
-    account_attributes_to_update.merge!(
-      card_last4: @params[:card_last4],
-      card_exp_month: @params[:card_exp_month],
-      card_exp_year: @params[:card_exp_year],
-      card_type: @params[:card_brand]
-    ) if @params[:card_last4]
-
     @account.update(account_attributes_to_update)
   end
 
   # Fires when users subscribe (/subscribe), update their card (/billing) and switch plans.
   def update_subscription
     success = stripe_call do
-      customer = Stripe::Customer.retrieve(@account.stripe_customer_id)
+      # Don't need this when I have the customer method
+      # customer = Stripe::Customer.retrieve(@account.stripe_customer_id)
       subscription = customer.subscriptions.retrieve(@account.stripe_subscription_id)
       subscription.source = @params[:stripeToken] if @params[:stripeToken]
       # Update plan if one is provided, otherwise use user's existing plan

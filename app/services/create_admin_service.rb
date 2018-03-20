@@ -14,7 +14,7 @@ class CreateAdminService
       user_id: admin_user.id,
       account_id: account.id
     )
-    Apartment::Tenant.switch('limestone') do
+    Apartment::Tenant.switch('public') do
       admin_au.add_role :admin
     end
     admin_user

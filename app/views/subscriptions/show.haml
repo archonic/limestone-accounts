@@ -1,6 +1,11 @@
+%h1 Billing
+.row
+  .col-12
+    = render 'accounts/navigation'
+
 .row
   .col-md
-    %h3 Billing
+    %h3.mt-3.mb-3 Payment Source
     -# Any user who can see this page should have a card_last4 populated by stripe webhook UpdateCustomer
     - if current_account.card_last4.present?
       %p Your card on file is:
@@ -15,15 +20,15 @@
       = render 'card_form', locals: { path: subscriptions_path, method: 'patch' }
 
   .col-md
-    %h3 Plan
+    %h3.mt-3.mb-3 Plan
     .form-group
       = "You are currently on the #{current_account.plan_name} plan."
       = render 'plan_switch_form', locals: { current_plan_id: current_account.plan_id }
-      = "Your roles are #{current_accounts_user.roles}."
+      = 'You are an account admin.' if current_accounts_user.public_has_role? :admin
 
   - if current_account.subscribed?
     .col-md
-      %h3 Next Payment
+      %h3.mt-3.mb-3 Next Payment
       %p
         Your card will be charged
         %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching', style: 'color: blue;' }

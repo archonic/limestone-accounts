@@ -17,7 +17,7 @@ class Invoice < ActiveRecord::Base
       },
       line_items: [
         ["Date",           formatted_invoice_date],
-        ["Account Owner", "#{account.owner.try(:full_name)} (#{account.owner.try(:email)})"],
+        ["Account Owner", "#{account.owner_au.try(:full_name)} (#{account.owner_au.try(:email)})"],
         ["Product",        "Example Product"],
         ["Amount",         formatted_amount],
         ["Charged to",     formatted_card]

@@ -15,4 +15,15 @@ class AccountsUser < ApplicationRecord
   scope :admins, -> { Apartment::Tenant.switch('public') { AccountsUser.with_role(:admin) } }
 
   delegate :email, to: :user
+  delegate :full_name, to: :user
+
+  def owner?
+    account.owner_au == self
+  end
+
+  def public_has_role?(role)
+    Apartment::Tenant.switch('public') do
+      self.has_role? role
+    end
+  end
 end
