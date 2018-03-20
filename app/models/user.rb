@@ -8,7 +8,6 @@ class User < ApplicationRecord
   has_many :accounts, through: :accounts_users
   has_many :accounts_users, autosave: true, dependent: :destroy, inverse_of: :user
 
-  has_many :invoices
   has_one_attached :avatar
 
   accepts_nested_attributes_for :accounts_users, reject_if: :all_blank

@@ -13,7 +13,6 @@ class UserDashboard < Administrate::BaseDashboard
     full_name: Field::String,
     first_name: Field::String,
     last_name: Field::String,
-    role: Field::String,
     encrypted_password: Field::String,
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
@@ -36,7 +35,6 @@ class UserDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :full_name,
-    :role,
     :sign_in_count,
     :last_sign_in_ip,
     :created_at,
@@ -48,7 +46,6 @@ class UserDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :full_name,
-    :role,
     :sign_in_count,
     :current_sign_in_at,
     :current_sign_in_ip,
@@ -63,7 +60,6 @@ class UserDashboard < Administrate::BaseDashboard
     :email,
     :first_name,
     :last_name,
-    :role
   ].freeze
 
   # Overwrite this method to customize how users are displayed

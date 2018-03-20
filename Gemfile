@@ -59,7 +59,7 @@ gem 'rolify', '~> 5'
 gem 'discard'
 
 # Pretty admin dashboards
-gem 'administrate'
+gem 'administrate', '~> 0.9'
 
 gem 'receipts'
 # Stripe stuff
