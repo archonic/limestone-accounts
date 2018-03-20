@@ -6,7 +6,7 @@ class AccountsController < ApplicationController
 
   # GET /account
   def show
-    @members = @account.users
+    @members = @account.users.order(:id)
   end
 
   # GET /accounts/new
