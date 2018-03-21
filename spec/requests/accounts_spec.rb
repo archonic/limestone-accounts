@@ -78,8 +78,7 @@ RSpec.describe AccountsController, type: :request do
         let(:account_params) { valid_account_params.except :plan_id }
 
         it 'errors on plan_id' do
-          subject
-          expect(flash[:error]).to match /Problem/
+          expect(subject).to render_template('accounts/new')
         end
       end
     end

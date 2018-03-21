@@ -10,5 +10,12 @@ FactoryBot.define do
     trait :super_admin do
       super_admin true
     end
+
+    trait :invited do
+      password nil
+      password_confirmation nil
+      invitation_created_at Time.now
+      invitation_sent_at Time.now
+    end
   end
 end

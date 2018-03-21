@@ -20,10 +20,11 @@ class ApplicationController < ActionController::Base
 
   # Users hitting this method are accepting their first invitation
   # So we can assume they want to sign into their first/only account
-  def after_accept_path_for(resource)
-    subdomain = resource.accounts.first.try(:subdomain)
-    new_user_session_path(subdomain: account.subdomain)
-  end
+  # NOTE not currently hit
+  # def after_accept_path_for(resource)
+  #   subdomain = resource.accounts.first.try(:subdomain)
+  #   new_user_session_path(subdomain: account.subdomain)
+  # end
 
   protected
 

@@ -19,7 +19,6 @@ class AccountsController < ApplicationController
     @account = Account.new(account_create_params)
     if @account.save
       UserMailer.welcome_email(@account.owner_au.user, @account).deliver_later
-      # We happen to already be on public tenant here
       # Must use owner_au here to add role correctly
       Apartment::Tenant.switch('public') { @account.owner_au.add_role :admin }
       SubscriptionService.new(
@@ -28,10 +27,10 @@ class AccountsController < ApplicationController
       ).create_subscription
       time_left_in_trial = distance_of_time_in_words(Time.current, @account.current_period_end)
 
-      # TODO Show a success message. This is hard because of how session domains work and how Devise handles `flash`.
+      # NOTE Showing a success message is difficult here
+      # because of how Devise handles `flash` and the subdomain session domain.
       redirect_to new_user_session_url( subdomain: @account.subdomain )
     else
-      flash[:error] = 'Problem! Try again.'
       render :new
     end
   end
