@@ -18,7 +18,7 @@ class AccountsUser < ApplicationRecord
   delegate :full_name, to: :user
 
   def owner?
-    account.owner_au == self
+    Apartment::Tenant.switch('public') { account.owner_au == self }
   end
 
   def public_has_role?(role)
