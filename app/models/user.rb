@@ -58,7 +58,13 @@ class User < ApplicationRecord
   private
 
     def set_full_name
-      self.full_name = being_invited? ? 'Invited Member' : [first_name, last_name].join(' ').strip
+      # Since we take a comma delimited list of emails for invites, we don't have name data.
+      # Set 'Invited Member' until they fill it out when accepting.
+      self.full_name = if first_name.nil? && last_name.nil? && being_invited?
+        'Invited Member'
+      else
+        [first_name, last_name].join(' ').strip
+      end
     end
 
     def being_invited?
