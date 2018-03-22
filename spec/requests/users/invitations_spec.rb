@@ -20,14 +20,16 @@ RSpec.describe Users::InvitationsController, type: :request do
     it 'calls mass_invite!' do
       allow(UserInvitationService).to receive(:mass_invite!).with(
         account,
-        [email_valid]
+        [email_valid],
+        user
       ).and_return({
         users_failed: [],
         users_successful: [User.new(email: email_valid)]
       })
       expect(UserInvitationService).to receive(:mass_invite!).with(
         account,
-        [email_valid]
+        [email_valid],
+        user
       ).once
       subject
     end
