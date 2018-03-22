@@ -1,6 +1,6 @@
 class UserInvitationService
   class << self
-    def mass_invite!(account, emails)
+    def mass_invite!(account, emails, inviter)
       users_successful = []
       users_failed = []
 
@@ -12,9 +12,10 @@ class UserInvitationService
         if user.save
           users_successful << user
           if user.activated?
-            UserMailer.invite_to_account(account).deliver_later
+            UserMailer.invite_to_account(user, account).deliver_later
           else
-            user.invite!
+            # current_user is the inviter
+            user.invite! inviter
           end
         else
           users_failed << user.email

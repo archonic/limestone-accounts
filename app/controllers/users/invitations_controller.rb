@@ -1,7 +1,7 @@
 class Users::InvitationsController < Devise::InvitationsController
   def create
     emails = params[:user][:email].split(',').map(&:strip)
-    results = UserInvitationService.mass_invite!(current_account, emails)
+    results = UserInvitationService.mass_invite!(current_account, emails, current_user)
     users_failed = results[:users_failed]
     success_count = results[:users_successful].size
     success_msg = "#{success_count} #{'member'.pluralize(success_count)} successfully invited."
@@ -11,7 +11,7 @@ class Users::InvitationsController < Devise::InvitationsController
       failure_msg = "#{failure_count} #{'member'.pluralize(failure_count)} failed to be invited."
       flash.merge!( error: failure_msg, emails_failed: users_failed )
     end
-    redirect_to new_user_invitation_path
+    redirect_to account_show_path
   end
 
   def edit

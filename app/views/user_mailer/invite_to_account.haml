@@ -1,6 +1,6 @@
 %h1= "Invitation to #{@account.name}"
 %p
-  = "____ has invited you to the account "
+  = "#{@user.invited_by.try(:full_name)} has invited you to the account "
   = link_to(@account.name, new_user_session_url(subdomain: @account.subdomain))
 
 %p You already have an account with us, so you can just log in.
