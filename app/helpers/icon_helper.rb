@@ -16,7 +16,7 @@ module IconHelper
       image_tag(
         image_url,
         class: 'rounded-circle'
-      ) + user.full_name.initials,
+      ) + user.try(:full_name).try(:initials),
       style: size.to_s,
       class: "avatar-#{img_or_text} " + additional_classes,
       alt: user.full_name
