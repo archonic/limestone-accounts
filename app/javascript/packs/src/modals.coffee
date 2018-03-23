@@ -1,7 +1,7 @@
 # Modified from https://github.com/ifad/data-confirm-modal/blob/master/vendor/assets/javascripts/data-confirm-modal.js
 $ ->
   ###*
-  # Builds the markup for a [Bootstrap modal](http://twitter.github.io/bootstrap/javascript.html#modals)
+  # Builds the markup for a [Bootstrap modal](https://getbootstrap.com/docs/4.0/components/modal/)
   # for the given `element`. Uses the following `data-` parameters to
   # customize it:
   #
