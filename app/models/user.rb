@@ -36,7 +36,8 @@ class User < ApplicationRecord
     "User;#{id}"
   end
 
-  def being_invited!
+  def being_invited!(account_id)
+    self.invited_account_id = account_id
     @being_invited = true
   end
 

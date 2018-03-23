@@ -7,7 +7,7 @@ class UserInvitationService
       emails.each do |email|
         user = User.find_or_initialize_by(email: email)
         user.accounts_users.find_or_initialize_by(account_id: account.id)
-        user.being_invited!
+        user.being_invited!(account.id)
 
         if user.save
           users_successful << user

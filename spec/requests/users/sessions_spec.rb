@@ -19,7 +19,7 @@ RSpec.describe Users::SessionsController, type: :request do
       raw, enc = Devise.token_generator.generate(User, :invitation_token)
       @raw_invitation_token = raw
       user = build(:user, :invited, invitation_token: enc)
-      user.being_invited!
+      user.being_invited! account_1.id
       user.save
       user
     end

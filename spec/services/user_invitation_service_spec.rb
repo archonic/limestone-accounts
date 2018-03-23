@@ -47,10 +47,11 @@ RSpec.describe UserInvitationService, type: :service do
         expect(User.count).to eq 6
       end
 
-      it 'populated invited_by' do
+      it 'populates invited_by and invited_account_id' do
         subject
         invited_user = User.find_by(email: subject[:users_successful].first.email)
         expect(invited_user.invited_by).to eq user
+        expect(invited_user.invited_account_id).to eq account.id
       end
 
       it 'calls invite!' do

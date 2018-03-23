@@ -132,7 +132,7 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer "invitation_limit"
-    t.string "invited_by_type"
+    t.integer "invited_account_id"
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
