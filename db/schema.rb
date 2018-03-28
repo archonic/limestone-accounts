@@ -45,7 +45,9 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
   create_table "accounts_users", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "user_id", null: false
+    t.datetime "discarded_at"
     t.index ["account_id", "user_id"], name: "index_accounts_users_on_account_id_and_user_id", unique: true
+    t.index ["discarded_at"], name: "index_accounts_users_on_discarded_at"
   end
 
   create_table "accounts_users_roles", id: false, force: :cascade do |t|

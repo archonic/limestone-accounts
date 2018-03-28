@@ -7,7 +7,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   has_many :accounts_users, autosave: true, dependent: :destroy, inverse_of: :user
   has_many :accounts, through: :accounts_users
-
   has_one_attached :avatar
 
   accepts_nested_attributes_for :accounts_users, reject_if: :all_blank

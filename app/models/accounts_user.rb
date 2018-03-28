@@ -1,4 +1,5 @@
 class AccountsUser < ApplicationRecord
+  include Discard::Model
   rolify strict: true
   # Would prefer to not have optional: true but seems to be
   # required for validation despite accepts_nested_attributes_for
@@ -16,6 +17,7 @@ class AccountsUser < ApplicationRecord
 
   delegate :email, to: :user
   delegate :full_name, to: :user
+  delegate :avatar, to: :user
 
   def owner?
     Apartment::Tenant.switch('public') { account.owner_au == self }
