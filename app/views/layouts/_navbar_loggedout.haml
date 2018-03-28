@@ -1,5 +1,8 @@
 %nav.navbar.navbar-expand-lg.navbar-light.bg-light.navbar-fixed-top
-  = link_to 'Brand', '/', class: 'navbar-brand'
+  - if current_account.present?
+    = link_to current_account.name, '/', class: 'navbar-brand'
+  - else
+    = link_to 'Brand', '/', class: 'navbar-brand'
   %button.navbar-toggler{type: 'button', data: { toggle: 'collapse', target:'#navbar_loggedout' }}
     %span.navbar-toggler-icon
   #nav_loggedout.collapse.navbar-collapse

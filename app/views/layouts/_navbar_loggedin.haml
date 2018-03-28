@@ -1,5 +1,15 @@
 %nav.navbar.navbar-expand-sm.navbar-light.bg-light.navbar-fixed-top
-  = link_to 'Brand', '/', class: 'navbar-brand'
+  - if current_user.accounts.size > 1
+    .dropdown
+      %button#account_switch.btn.btn-link.dropddown-toggle.navbar-brand{ type: 'button', data: { toggle: 'dropdown' } }
+        = current_account.name
+        = icon(:'angle-down')
+      .dropdown-menu{'aria-labelledby': 'account_switch'}
+        %h6.dropdown-header Switch Accounts
+        - current_user.accounts.except(current_account).each do |account|
+          = link_to account.name, dashboard_url(subdomain: account.subdomain), class: 'dropdown-item'
+  - else
+    = link_to current_account.name, '/', class: 'navbar-brand'
   %button.navbar-toggler{type: 'button', data: { toggle: 'collapse', target:'#nav_loggedin' }}
     %span.navbar-toggler-icon
   #nav_loggedin.collapse.navbar-collapse
