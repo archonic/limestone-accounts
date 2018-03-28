@@ -6,6 +6,7 @@ module ApartmentHelper
   end
 
   def current_accounts_user
+    return nil if current_user.nil?
     current_user.accounts_users.where(
       account: current_account
     ).limit(1).first

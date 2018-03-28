@@ -1,5 +1,14 @@
 class Users::InvitationsController < Devise::InvitationsController
+  # Invitations Controller has it's own token based authentication
+  before_action :skip_authorization, only: [:edit, :update]
+
+  def new
+    authorize :invitation
+    super
+  end
+
   def create
+    authorize :invitation
     emails = params[:user][:email].split(',').map(&:strip)
     results = UserInvitationService.mass_invite!(current_account, emails, current_user)
     users_failed = results[:users_failed]
@@ -16,6 +25,10 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def edit
     @minimum_password_length = Devise.password_length.min
+    super
+  end
+
+  def update
     super
   end
 

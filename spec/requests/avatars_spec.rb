@@ -2,9 +2,12 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 RSpec.describe AvatarsController, type: :request do
-  let(:user) { create(:user) }
+  let(:au) { create(:accounts_user) }
+  let(:user) { au.user }
   let(:file) { fixture_file_upload("#{fixture_path}/files/money_sloth.png") }
-
+  before do
+    host! "#{au.account.subdomain}.lvh.me:3000"
+  end
 
   describe '#update' do
     subject do

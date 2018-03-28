@@ -2,6 +2,7 @@ class InvoicesController < ApplicationController
   before_action :set_invoice, only: [:show]
 
   def show
+    authorize @invoice
     respond_to do |format|
       format.html
       format.pdf {
@@ -16,6 +17,6 @@ class InvoicesController < ApplicationController
   private
 
   def set_invoice
-    @invoice = Invoice.find params[:id]
+    @invoice = policy_scope(Invoice).find(params[:id])
   end
 end

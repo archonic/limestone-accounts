@@ -1,10 +1,12 @@
 class AvatarsController < ApplicationController
   before_action :set_user, only: [:update, :destroy]
   before_action :set_avatar, only: [:update, :destroy]
+  before_action :skip_authorization
   respond_to :json
   layout false
 
   def update
+    authorize @avatar
     if params.try(:[], :user).try(:[], :avatar).present?
       avatar_uploaded = params[:user][:avatar]
     else
@@ -20,6 +22,7 @@ class AvatarsController < ApplicationController
   end
 
   def destroy
+    # authorize @avatar
     @avatar.purge
 
     respond_to do |format|
@@ -33,7 +36,6 @@ class AvatarsController < ApplicationController
 
   def set_user
     @user = current_user
-    raise Pundit::NotAuthorizedError unless @user.present?
   end
 
   def set_avatar

@@ -1,5 +1,5 @@
 .row.justify-content-md-center
-  .col-md-5
+  .col-md-8
     %h2= t('devise.invitations.new.header', account_name: current_account.name)
     = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post} do |f|
       = devise_error_messages!

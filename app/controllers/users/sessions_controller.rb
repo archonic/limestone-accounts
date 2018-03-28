@@ -1,4 +1,6 @@
 class Users::SessionsController < Devise::SessionsController
+  before_action :skip_authorization, only: [:new, :create, :destroy, :find_workspace]
+
   def find_workspace
     subdomain = Account.find_by(subdomain: params[:subdomain]).try(:subdomain)
     if subdomain

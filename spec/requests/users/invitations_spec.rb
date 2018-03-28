@@ -9,6 +9,7 @@ RSpec.describe Users::InvitationsController, type: :request do
 
   describe '#create' do
     before do
+      Apartment::Tenant.switch('public') { au.add_role :admin }
       host! "#{account.subdomain}.lvh.me"
       sign_in user
     end

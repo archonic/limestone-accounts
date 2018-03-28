@@ -1,18 +1,25 @@
 class AccountsController < ApplicationController
   include ActionView::Helpers::DateHelper
+  before_action :skip_authorization, only: [:new, :create]
   before_action :check_public_registration, only: [:new, :create]
   before_action :set_account, only: [:show, :edit, :update, :destroy]
   before_action :setup_form, only: [:new, :create]
 
   # GET /account
   def show
-    @members = @account.users.order(:id)
+    authorize @account
+    @members = @account.accounts_users.order(:id)
   end
 
   # GET /accounts/new
   def new
     @account = Account.new
     @account.build_owner_au.user = User.new
+  end
+
+  # GET /account/settings
+  def edit
+    authorize @account
   end
 
   def create
@@ -37,6 +44,9 @@ class AccountsController < ApplicationController
 
   # DELETE /accounts/:id
   def destroy
+    authorize @account
+    # Can't look up the subscription on Stripe if we don't have it.
+    # If stripe_subscription_id is nil, subscription was either never setup or already destroyed
     return true if @account.stripe_subscription_id.nil?
     SubscriptionService.new(
       @account

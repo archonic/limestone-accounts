@@ -6,12 +6,19 @@ RSpec.describe InvoicesController, type: :request do
   before do
     StripeMock.start
     stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, trial_period_days: $trial_period_days)
+    host! "#{account.subdomain}.lvh.me:3000"
   end
   after { StripeMock.stop }
-  let(:mock_customer) { Stripe::Customer.create }
-  let(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
-  let(:user) { create(:user) }
-  let(:invoice) { create(:invoice) }
+  # let(:mock_customer) { Stripe::Customer.create }
+  # let(:mock_subscription) { mock_customer.subscriptions.create(plan: 'example-plan-id') }
+  let!(:au) { create(:accounts_user, :subscribed) }
+  let(:user) { au.user }
+  let(:account) { au.account }
+  let(:invoice) do
+    Apartment::Tenant.switch(account.subdomain) do
+      create(:invoice, account_id: account.id)
+    end
+  end
 
   describe 'GET /invoices/:id' do
     subject do

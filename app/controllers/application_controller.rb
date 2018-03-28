@@ -2,11 +2,14 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ActionView::Helpers::DateHelper
   include ApartmentHelper
-
   protect_from_forgery with: :exception
   impersonates :user
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_access, if: :access_required?
+
+  # Pundit reminder to call authorize within actions or scope for index actions
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   def after_sign_in_path_for(resource)
     # If subdomain isn't provided, go to users first account
@@ -25,6 +28,15 @@ class ApplicationController < ActionController::Base
   #   subdomain = resource.accounts.first.try(:subdomain)
   #   new_user_session_path(subdomain: account.subdomain)
   # end
+
+  # Replaces 'current_user' to provide account and accounts_user in Context.
+  def pundit_user
+    @pundit_user ||= Context.new(
+      account: current_account,
+      accounts_user: current_accounts_user,
+      user: current_user
+    )
+  end
 
   protected
 
