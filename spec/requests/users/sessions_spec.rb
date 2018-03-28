@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Users::SessionsController, type: :request do
-  # NOTE Only bothered testing custom methods we have. Don't need to test Devise itself.
+  # NOTE Only bothered testing custom methods. Don't need to test Devise itself.
 
   let(:au_1) { create(:accounts_user) }
   let(:account_1) { au_1.account }
@@ -12,6 +12,16 @@ RSpec.describe Users::SessionsController, type: :request do
 
   before do
     host! 'lvh.me:3000'
+  end
+
+  describe '#create' do
+    let(:au_disabled) { create(:accounts_user, disabled_at: 1.second.ago) }
+    let(:account) { au_disabled.account }
+    subject do
+      post new_user_session_url(au_disabled.account.subdomain), params: {
+        user: { email: au_disabled.email, password: 'password' }
+      }
+    end
   end
 
   describe 'accept invitation' do
