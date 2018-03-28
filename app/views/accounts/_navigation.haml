@@ -1,11 +1,8 @@
-%ul.nav.nav-tabs
-  %li.nav-item
-    = link_to 'Members', accounts_path, class: 'nav-link' + active_class(accounts_path)
+.list-group.list-group-flush{role: 'tablist'}
+  = link_to 'Members', accounts_path, class: 'list-group-item' + active_class(accounts_path)
   - if current_account.present?
-    %li.nav-item
-      - if current_account.subscribed?
-        = link_to 'Billing', billing_path, class: 'nav-link' + active_class(billing_path)
-      - else
-        = link_to 'Subscribe ', subscribe_path, class: 'nav-link' + active_class(subscribe_path)
-  %li.nav-item
-    = link_to 'Settings', account_settings_path, class: 'nav-link' + active_class(account_settings_path)
+    - if current_account.subscribed?
+      = link_to 'Billing', billing_path, class: 'list-group-item' + active_class(billing_path)
+    - else
+      = link_to 'Subscribe ', subscribe_path, class: 'list-group-item' + active_class(subscribe_path)
+  = link_to 'Settings', account_settings_path, class: 'list-group-item' + active_class(account_settings_path)

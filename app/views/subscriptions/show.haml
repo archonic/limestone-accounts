@@ -1,11 +1,10 @@
 %h1 Billing
+%hr
 .row
-  .col-12
+  .col-3
     = render 'accounts/navigation'
-
-.row
-  .col-md
-    %h3.mt-3.mb-3 Payment Source
+  .col-9
+    %h3 Payment Source
     -# Any user who can see this page should have a card_last4 populated by stripe webhook UpdateCustomer
     - if current_account.card_last4.present?
       %p Your card on file is:

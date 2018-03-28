@@ -1,8 +1,10 @@
 %h1 Account
+%hr
 .row
-  .col-12
+  .col-3
     = render 'navigation'
-    %h3.mt-3.mb-3
+  .col-9
+    %h3
       All Members
       = link_to icon(:'envelope-o') + ' Invite New Members', new_user_invitation_path, class: 'btn btn-success pull-right'
     %p= raw "You are the <strong>owner</strong> of this workspace" if current_accounts_user.owner?
