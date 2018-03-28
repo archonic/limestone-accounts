@@ -27,7 +27,10 @@ class AccountsController < ApplicationController
     if @account.save
       UserMailer.welcome_email(@account.owner_au.user, @account).deliver_later
       # Must use owner_au here to add role correctly
-      Apartment::Tenant.switch('public') { @account.owner_au.add_role :admin }
+      Apartment::Tenant.switch('public') do
+        @account.owner_au.add_role :admin
+        @account.owner_au.user.invitation_accepted_at = Time.current
+      end
       SubscriptionService.new(
         @account,
         { plan_id: @account.plan_id }

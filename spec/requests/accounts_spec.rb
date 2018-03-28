@@ -56,10 +56,11 @@ RSpec.describe AccountsController, type: :request do
         subject
       end
 
-      it 'assigns the role of admin to the owner' do
+      it 'assigns admin role and populates invitation_accepted_at for owner' do
         subject
         owner = Account.find_by(subdomain: 'subdomain').owner
         expect(owner.has_role? :admin).to eq true
+        expect(owner.user.invitation_accepted_at).to be_present
       end
 
       it 'creates the subscription in Stripe' do
