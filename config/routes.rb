@@ -21,18 +21,18 @@ Rails.application.routes.draw do
 
   # Users are only added by invitation to accounts, but we still want users to manage their profile
   devise_for :users, path: '',
-    skip: [:registrations],
     path_names: {
       sign_in: 'signin',
       sign_out: 'signout'
     },
     controllers: {
       sessions: 'users/sessions',
-      invitations: 'users/invitations'
-    } # registrations: 'users/registrations', passwords: "users/passwords"
+      invitations: 'users/invitations',
+      registrations: 'users/registrations'
+    } # passwords: "users/passwords"
   as :user do
-    get 'users/edit', to: 'devise/registrations#edit', as: 'edit_user_registration'
-    put 'users', to: 'devise/registrations#update', as: 'user_registration'
+    # get 'users/edit', to: 'devise/registrations#edit', as: 'edit_user_registration'
+    # put 'users', to: 'devise/registrations#update', as: 'user_registration'
     post 'find_workspace', to: 'users/sessions#find_workspace', as: 'find_workspace'
   end
 
@@ -59,6 +59,9 @@ Rails.application.routes.draw do
       patch 'account', to: 'accounts#update', as: 'account_update'
       delete 'account/cancelled', to: 'accounts#destroy', as: 'account_destroy'
       get 'account/settings', to: 'accounts#edit', as: 'account_settings'
+
+      # Accounts user management
+      delete 'accounts_user/:id', to: 'accounts_users#destroy', as: 'accounts_user_destroy'
 
       # Members management
       # get 'members/new', to: 'invitations'
