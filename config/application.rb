@@ -33,8 +33,9 @@ module Limestone
     # Set Redis as the back-end for the cache.
     config.cache_store = :redis_store, "#{ENV['REDIS_BASE_URL']}cache"
 
-    # Load/require lib/core_ext
+    # Load/require custom ruby / rails extentions
     config.autoload_paths += Dir[File.join(Rails.root, "lib", "core_ext", "*.rb")].each {|l| require l }
+    config.autoload_paths += Dir[File.join(Rails.root, "lib", "rails_ext", "*.rb")].each {|l| require l }
 
     # Set Sidekiq as the back-end for Active Job.
     config.active_job.queue_adapter = :sidekiq
