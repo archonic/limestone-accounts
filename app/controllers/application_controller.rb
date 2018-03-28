@@ -21,14 +21,6 @@ class ApplicationController < ActionController::Base
     dashboard_url(subdomain: account.subdomain)
   end
 
-  # Users hitting this method are accepting their first invitation
-  # So we can assume they want to sign into their first/only account
-  # NOTE not currently hit
-  # def after_accept_path_for(resource)
-  #   subdomain = resource.accounts.first.try(:subdomain)
-  #   new_user_session_path(subdomain: account.subdomain)
-  # end
-
   # Replaces 'current_user' to provide account and accounts_user in Context.
   def pundit_user
     @pundit_user ||= Context.new(
