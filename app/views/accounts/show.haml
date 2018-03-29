@@ -29,4 +29,5 @@
                       .dropdown
                         = button_tag raw(user_label), id: "dropdown_actions_#{member.id}", class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false }
                         .dropdown-menu.dropdown-menu-right{ aria: { labelledby: "dropdown_actions_#{member.id}" } }
-                          = link_to 'Delete', accounts_user_destroy_path(member.id), method: :delete, class: 'dropdown-item'
+                          - unless member.owner?
+                            = link_to 'Delete', accounts_user_destroy_path(member.id), method: :delete, class: 'dropdown-item'

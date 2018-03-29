@@ -1,5 +1,6 @@
-class AccountPolicy < ApplicationPolicy
+class AccountsUserPolicy < ApplicationPolicy
   def destroy?
-    @current_accounts_user.owner?
+    accounts_user.owner? &&
+    !record.owner?
   end
 end

@@ -11,6 +11,9 @@ class ApplicationController < ActionController::Base
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  # Exception handling
+  rescue_from Pundit::NotAuthorizedError, with: :handle_pundit_not_authorized
+
   def after_sign_in_path_for(resource)
     # If subdomain isn't provided, go to users first account
     account = if request.subdomains.try(:first).nil?
@@ -54,5 +57,20 @@ class ApplicationController < ActionController::Base
     if current_account && current_account.inactive?
       redirect_to billing_path, flash: { error: 'Your account is inactive. Access will be restored once payment succeeds.' }
     end
+  end
+
+  private
+
+  def handle_pundit_not_authorized(exception)
+    policy = exception.policy
+    record = policy.record
+    message = case Rails.env
+    when 'development', 'test'
+      "#{policy.class.name} does not allow #{exception.query} on #{record.class.name} <#{record.id}>."
+    else
+      "Access denied."
+    end
+    flash[:error] = message
+    redirect_back(fallback_location: dashboard_path)
   end
 end
