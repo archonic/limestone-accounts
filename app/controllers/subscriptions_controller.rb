@@ -3,7 +3,7 @@ class SubscriptionsController < ApplicationController
   skip_before_action :check_access, only: :show
 
   # NOTE This isn't a controller for a typical model. Subscriptions live in Stripe.
-  # We use the columns on the account to know an accounts subscription status.
+  # We use the columns on the account to know an account's subscription status.
 
   # GET /billing
   def show
