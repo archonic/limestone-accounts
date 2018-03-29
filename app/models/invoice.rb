@@ -1,6 +1,7 @@
 # TODO This is formatting data for presentation in the model and violating MVC
 # Ditch the reciepts gem and just do a pdf view
 class Invoice < ApplicationRecord
+  include CurrencyHelper
   belongs_to :account
   serialize :lines, JSON
 
@@ -29,6 +30,10 @@ class Invoice < ApplicationRecord
   # and get invoiced before the stripe webhook updates their account (super unlikely).
   def formatted_card
     "#{account.card_type} (**** **** **** #{account.card_last4})"
+  end
+
+  def cost
+    formatted_amount(amount, currency)
   end
 
   def formatted_invoice_date
