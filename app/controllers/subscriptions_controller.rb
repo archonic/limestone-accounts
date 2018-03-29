@@ -7,7 +7,8 @@ class SubscriptionsController < ApplicationController
 
   # GET /billing
   def show
-    redirect_to subscribe_path unless current_account.subscribed?
+    @account = current_account
+    redirect_to subscribe_path unless @account.subscribed?
     authorize :subscription
     @plans = Plan.active
   end
@@ -15,7 +16,8 @@ class SubscriptionsController < ApplicationController
   # GET /subscribe
   def new
     authorize :subscription
-    redirect_to billing_path if current_account.subscribed?
+    @account= current_account
+    redirect_to billing_path if @account.subscribed?
   end
 
   # PATCH /subscriptions
