@@ -29,6 +29,7 @@ RSpec.describe SubscriptionsController, type: :request do
         sign_in user_no_subscription
       end
 
+      # NOTE saw a transient failure here
       it 'redirects to subscribe page' do
         expect(subject).to redirect_to subscribe_path
       end
