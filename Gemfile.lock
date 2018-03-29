@@ -461,7 +461,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers (~> 3.1)
   sidekiq (~> 5.0)
-  simple_form
+  simple_form (~> 3.5)
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)

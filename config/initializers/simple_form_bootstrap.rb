@@ -26,20 +26,16 @@ SimpleForm.setup do |config|
     b.optional :minlength
     b.optional :readonly
     b.use :label, class: 'form-control-label'
-
     b.use :input
     b.use :error, wrap_with: { tag: 'span', class: 'form-text text-muted' }
     b.use :hint,  wrap_with: { tag: 'small', class: 'form-text text-muted' }
   end
 
-  config.wrappers :vertical_boolean, tag: 'div', class: 'form-group', error_class: 'has-danger' do |b|
+  config.wrappers :vertical_boolean, tag: 'div', class: 'form-check', error_class: 'has-danger' do |b|
     b.use :html5
     b.optional :readonly
-
-    b.wrapper tag: 'div', class: 'checkbox' do |ba|
-      ba.use :label_input
-    end
-
+    b.use :input, class: 'form-check-input'
+    b.use :label, class: 'form-check-label'
     b.use :error, wrap_with: { tag: 'span', class: 'form-text text-muted' }
     b.use :hint,  wrap_with: { tag: 'small', class: 'form-text text-muted' }
   end

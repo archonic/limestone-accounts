@@ -41,7 +41,7 @@ gem 'redis-rails', '~> 5.0'
 
 # Pretty html abstractions
 gem 'haml', '~> 5'
-gem 'simple_form'
+gem 'simple_form', '~> 3.5'
 
 # Multi-tennancy
 # Temporary hold over until this is solved: https://github.com/influitive/apartment/issues/518
