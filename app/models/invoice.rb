@@ -3,7 +3,6 @@
 class Invoice < ApplicationRecord
   belongs_to :account
   serialize :lines, JSON
-  include ActionView::Helpers::NumberHelper
 
   def receipt
     Receipts::Receipt.new(
@@ -19,7 +18,7 @@ class Invoice < ApplicationRecord
         ["Date",           formatted_invoice_date],
         ["Account Owner", "#{account.owner_au.try(:full_name)} (#{account.owner_au.try(:email)})"],
         ["Product",        "Example Product"],
-        ["Amount",         formatted_amount],
+        ["Amount",         formatted_amount(amount, currency)],
         ["Charged to",     formatted_card]
       ]
     )
@@ -34,12 +33,5 @@ class Invoice < ApplicationRecord
 
   def formatted_invoice_date
     paid_at.strftime('%l:%M %P, %B %d, %Y') << " UTC"
-  end
-
-  def formatted_amount
-    [
-      number_to_currency(amount / 100),
-      currency.try(:upcase)
-    ].join(' ').strip
   end
 end
