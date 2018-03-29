@@ -4,6 +4,7 @@ class AccountsUsersController < ApplicationController
   def destroy
     authorize @accounts_user
     @accounts_user.discard
+    SubscriptionsController.new(@accounts_user.account).update_subscription
     flash[:success] = "The user #{@accounts_user.full_name} <#{@accounts_user.email}> has been removed from your account."
     redirect_to account_show_path
   end

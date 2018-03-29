@@ -4,59 +4,61 @@
   .col-3
     = render 'accounts/navigation'
   .col-9
-    %h3 Payment Source
-    -# Any user who can see this page should have a card_last4 populated by stripe webhook UpdateCustomer
-    - if current_account.card_last4.present?
-      %p Your card on file is:
-      %p
-        = "#{current_account.card_type} **** **** **** #{current_account.card_last4}"
-        %br
-        = "Expires #{current_account.card_exp_month} / #{current_account.card_exp_year}"
-    .form-group
-      %button.btn{class: "#{current_account.past_due? ? 'btn-danger' : 'btn-outline-secondary'}", type: 'button', 'data-toggle': 'collapse', 'data-target': '#new_card'}
-        Update your card
-    #new_card.collapse
-      = render 'card_form', locals: { path: subscriptions_path, method: 'patch' }
+    .row
+      .col-md
+        %h3 Payment Source
+        -# Any user who can see this page should have a card_last4 populated by stripe webhook UpdateCustomer
+        - if @account.card_last4.present?
+          %p Your card on file is:
+          %p
+            = "#{@account.card_type} **** **** **** #{@account.card_last4}"
+            %br
+            = "Expires #{@account.card_exp_month} / #{@account.card_exp_year}"
+        .form-group
+          %button.btn{class: "#{@account.past_due? ? 'btn-danger' : 'btn-outline-secondary'}", type: 'button', 'data-toggle': 'collapse', 'data-target': '#new_card'}
+            Update your card
+        #new_card.collapse
+          = render 'card_form', locals: { path: subscriptions_path, method: 'patch' }
 
-  .col-md
-    %h3.mt-3.mb-3 Plan
-    .form-group
-      = "You are currently on the #{current_account.plan_name} plan."
-      = render 'plan_switch_form', locals: { current_plan_id: current_account.plan_id }
-      = 'You are an account admin.' if current_accounts_user.public_has_role? :admin
+      .col-md
+        %h3.mt-3.mb-3 Plan
+        .form-group
+          = "You are currently on the #{@account.plan_name} plan."
+          = render 'plan_switch_form', locals: { current_plan_id: @account.plan_id }
 
-  - if current_account.subscribed?
-    .col-md
-      %h3.mt-3.mb-3 Next Payment
-      %p
-        Your card will be charged
-        %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching', style: 'color: blue;' }
-          = current_account.cost
-        = "on #{current_account.current_period_end.strftime('%A, %B %e, %Y')}."
+      - if @account.subscribed?
+        .col-md
+          %h3.mt-3.mb-3 Next Payment
+          %p
+            = "You have #{@account.active_users.count} #{'active member'.pluralize(@account.active_users.count)}."
+            Your card will be charged
+            %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching or adding/removing users', style: 'color: blue;' }
+              = number_to_currency(@account.plan_amount * @account.active_users.count / 100)
+            = "on #{@account.current_period_end.strftime('%A, %B %e, %Y')}."
 
-%hr
-%h3 Your Invoices
-%table.table
-  %thead
-    %tr
-      %th{scope: 'col'}#
-      %th{scope: 'col'}Date
-      %th{scope: 'col'}Services
-      %th{scope: 'col'}Quanity
-      %th{scope: 'col'}Amount
-      %th{scope: 'col'}PDF
-  %tbody
-    - if current_account.invoices.any?
-      - current_account.invoices.each_with_index do |invoice, index|
+    %hr
+    %h3 Your Invoices
+    %table.table
+      %thead
         %tr
-          %th{scope: 'row'}= index
-          %td= invoice.created_at.strftime("%B %d, %Y")
-          - invoice.lines.each do |line|
-            %td= line['description']
-            %td= "x #{line['quantity']}"
-          %td= invoice.formatted_amount
-          %td= invoice_pdf_link(invoice)
-    - else
-      %tr
-        %td{colspan: 6}
-          %h5.text-center.text-muted You have no invoices
+          %th{scope: 'col'}#
+          %th{scope: 'col'}Date
+          %th{scope: 'col'}Services
+          %th{scope: 'col'}Quanity
+          %th{scope: 'col'}Amount
+          %th{scope: 'col'}PDF
+      %tbody
+        - if @account.invoices.any?
+          - @account.invoices.each_with_index do |invoice, index|
+            %tr
+              %th{scope: 'row'}= index
+              %td= invoice.created_at.strftime("%B %d, %Y")
+              - invoice.lines.each do |line|
+                %td= line['description']
+                %td= "x #{line['quantity']}"
+              %td= invoice.formatted_amount
+              %td= invoice_pdf_link(invoice)
+        - else
+          %tr
+            %td{colspan: 6}
+              %h5.text-center.text-muted You have no invoices

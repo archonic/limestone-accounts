@@ -17,7 +17,8 @@ class Account < ActiveRecord::Base
     format: { with: /\A[a-zA-Z0-9\-]+\Z/i, message: 'accepts only letters, numbers and a dash.' },
     if: :subdomain_changed?
 
-  delegate :cost, to: :plan
+  delegate :cost, to: :plan, prefix: true
+  delegate :amount, to: :plan, prefix: true
   delegate :name, to: :plan, prefix: true
   delegate :user, to: :owner_au, prefix: true
 
@@ -50,6 +51,10 @@ class Account < ActiveRecord::Base
 
   def flipper_id
     "Account;#{id}"
+  end
+
+  def active_users
+    accounts_users.joins(:user).kept.where.not(users: { invitation_accepted_at: nil })
   end
 
   private
