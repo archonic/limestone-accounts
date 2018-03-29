@@ -3,6 +3,7 @@ class AccountsUser < ApplicationRecord
   rolify strict: true
   # Would prefer to not have optional: true but seems to be
   # required for validation despite accepts_nested_attributes_for
+  # https://github.com/rails/rails/issues/25198#issuecomment-372894070
   belongs_to :account, inverse_of: :accounts_users, optional: true
   belongs_to :user, autosave: true, inverse_of: :accounts_users
 
