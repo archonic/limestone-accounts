@@ -7,10 +7,11 @@
     %span.navbar-toggler-icon
   #nav_loggedout.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
-      %li.nav-item
-        = link_to 'Pricing', pricing_path, class: 'nav-link'
-      %li.nav-item
-        = link_to 'About', about_path, class: 'nav-link'
+      - unless current_account.present?
+        %li.nav-item
+          = link_to 'Pricing', pricing_path, class: 'nav-link'
+        %li.nav-item
+          = link_to 'About', about_path, class: 'nav-link'
     .form
       = link_to 'Join', account_new_path, class: 'btn btn-success' if Flipper.enabled?(:public_registration)
       = link_to 'Sign in', new_user_session_path, class: 'btn btn-primary'

@@ -36,19 +36,27 @@ Rails.application.routes.draw do
     post 'find_workspace', to: 'users/sessions#find_workspace', as: 'find_workspace'
   end
 
+  # Signed out
   unauthenticated :user do
-    # Signed out (marketing) pages
-    root to: 'pages#features'
-    get 'pricing', to: 'pages#pricing'
-    get 'about', to: 'pages#about'
-    get 'cancelled', to: 'pages#cancelled'
+    constraints NoSubdomain do
+      root to: 'pages#features'
+      get 'pricing', to: 'pages#pricing'
+      get 'about', to: 'pages#about'
+      get 'cancelled', to: 'pages#cancelled'
+    end
+
+    constraints Subdomain do
+      devise_scope :user do
+        root to: 'users/sessions#new'
+      end
+    end
   end
 
   # Account registration
   post 'account', to: 'accounts#create', as: 'accounts'
   get 'account/new', to: 'accounts#new'
 
-  # Signed in pages
+  # Signed in
   authenticated :user do
     constraints Subdomain do
       root to: 'dashboard#show', as: 'dashboard'
@@ -63,20 +71,16 @@ Rails.application.routes.draw do
       # Accounts user management
       delete 'accounts_user/:id', to: 'accounts_users#destroy', as: 'accounts_user_destroy'
 
-      # Members management
-      # get 'members/new', to: 'invitations'
+      # Avatars
+      patch 'avatars', to: 'avatars#update'
+      delete 'avatar', to: 'avatars#destroy'
+
+      # Subscription stuff
+      get 'billing', to: 'subscriptions#show'
+      get 'subscribe', to: 'subscriptions#new'
+      patch 'subscriptions', to: 'subscriptions#update'
+      get 'invoices', to: 'invoices#index'
+      get 'invoices/:id', to: 'invoices#show', as: 'invoice'
     end
-
-    # Avatars
-    patch 'avatars', to: 'avatars#update'
-    delete 'avatar', to: 'avatars#destroy'
-
-    # Subscription stuff
-    get 'billing', to: 'subscriptions#show'
-    get 'subscribe', to: 'subscriptions#new'
-    patch 'subscriptions', to: 'subscriptions#update'
-    get 'invoices', to: 'invoices#index'
-    get 'invoices/:id', to: 'invoices#show', as: 'invoice'
   end
-
 end
