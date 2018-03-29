@@ -9,9 +9,9 @@ RSpec.describe SubscriptionsController, type: :request do
   end
   after { StripeMock.stop }
 
-  let!(:au_no_sub) { create(:accounts_user) }
-  let(:account_no_sub) { au_no_sub.account }
-  let(:user_no_sub) { au_no_sub.user }
+  let!(:au_no_subscription) { create(:accounts_user) }
+  let(:account_no_subscription) { au_no_subscription.account }
+  let(:user_no_subscription) { au_no_subscription.user }
 
   let!(:au_subscribed) { create(:accounts_user, :subscribed) }
   let(:account_subscribed) { au_subscribed.account }
@@ -25,8 +25,8 @@ RSpec.describe SubscriptionsController, type: :request do
 
     context 'as an account with no subscription' do
       before do
-        host! "#{account_no_sub.subdomain}.lvh.me"
-        sign_in user_no_sub
+        host! "#{account_no_subscription.subdomain}.lvh.me"
+        sign_in user_no_subscription
       end
 
       it 'redirects to subscribe page' do
@@ -68,9 +68,9 @@ RSpec.describe SubscriptionsController, type: :request do
 
     context 'as an account with no subscription' do
       before do
-        host! "#{account_no_sub.subdomain}.lvh.me"
-        sign_in user_no_sub
-        Apartment::Tenant.switch('public') { user_no_sub.accounts_user(account_no_sub).add_role :admin }
+        host! "#{account_no_subscription.subdomain}.lvh.me"
+        sign_in user_no_subscription
+        Apartment::Tenant.switch('public') { user_no_subscription.accounts_user(account_no_subscription).add_role :admin }
       end
       it 'redirects to root with access denied' do
         expect(subject).to redirect_to subscribe_path
