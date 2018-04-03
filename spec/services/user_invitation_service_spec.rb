@@ -64,9 +64,9 @@ RSpec.describe UserInvitationService, type: :service do
         let(:account_second) { create(:account, subdomain: 'second') }
 
         it 'sends invite_to_account' do
-          binding.pry
           invite_to_account_dbl = double(ActionMailer::MessageDelivery)
           allow(UserMailer).to receive(:invite_to_account).and_return(invite_to_account_dbl)
+          expect(invite_to_account_dbl).to receive(:deliver_later)
           results = UserInvitationService.mass_invite!(account_second, [user.email], user)
           expect(results[:users_successful].first).to eq user
         end
