@@ -19,6 +19,7 @@ class Account < ActiveRecord::Base
 
   delegate :cost, to: :plan, prefix: true
   delegate :amount, to: :plan, prefix: true
+  delegate :currency, to: :plan, prefix: true
   delegate :name, to: :plan, prefix: true
   delegate :user, to: :owner_au, prefix: true
 

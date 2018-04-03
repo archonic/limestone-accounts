@@ -5,6 +5,7 @@ FactoryBot.define do
     email {  Faker::Internet.email }
     password 'password'
     password_confirmation 'password'
+    invitation_accepted_at Time.current # Users who signed up for the account get this assigned in AccountsUsersController#create
     initialize_with { User.where(email: email).first_or_initialize }
 
     trait :super_admin do
@@ -16,6 +17,7 @@ FactoryBot.define do
       password_confirmation nil
       invitation_created_at Time.now
       invitation_sent_at Time.now
+      invitation_accepted_at nil
     end
   end
 end

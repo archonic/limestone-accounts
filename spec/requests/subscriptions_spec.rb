@@ -49,7 +49,7 @@ RSpec.describe SubscriptionsController, type: :request do
 
       it 'shows next payment' do
         expect(subject.body).to include 'Your card will be charged'
-        expect(subject.body).to include account_subscribed.cost
+        expect(subject.body).to include account_subscribed.plan_cost
         expect(subject.body).to include "on #{account_subscribed.current_period_end.strftime('%A, %B %e, %Y')}"
       end
     end

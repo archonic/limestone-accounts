@@ -33,7 +33,7 @@
             = "You have #{@account.active_users.count} #{'active member'.pluralize(@account.active_users.count)}."
             Your card will be charged
             %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching or adding/removing users', style: 'color: blue;' }
-              = number_to_currency(@account.plan_amount * @account.active_users.count / 100)
+              = formatted_amount(@account.plan_amount * @account.active_users.count, @account.plan_currency)
             = "on #{@account.current_period_end.strftime('%A, %B %e, %Y')}."
 
     %hr
