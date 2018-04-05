@@ -1,5 +1,10 @@
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  add_filter 'app/dashboards/dashboard_manifest.rb'
+  add_filter do |source_file|
+    source_file.lines.count < 5
+  end
+end
 ENV['RAILS_ENV'] = 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
