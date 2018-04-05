@@ -44,7 +44,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 * Persistent banner with link to billing page for accounts that are past due.
 * Opinionated search integration using Elasticsearch via Searchkick. Gem is in place but integration is up to you.
 * Feature control using the flipper gem. Demonstrated with public_registration.
-* 82% RSpec test coverage.
+* 87% RSpec test coverage.
 
 ## Roadmap
 * In-browser image cropping using jcrop or the likes.
