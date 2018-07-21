@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.0'
+ruby "2.5.1"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0.rc1'
+gem "rails", "~> 5.2"
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.21'
@@ -41,11 +41,10 @@ gem 'redis-rails', '~> 5.0'
 
 # Pretty html abstractions
 gem 'haml', '~> 5'
-gem 'simple_form', '~> 3.5'
+gem "simple_form", "~> 4"
 
 # Multi-tennancy
-# Temporary hold over until this is solved: https://github.com/influitive/apartment/issues/518
-gem 'apartment', github: 'archonic/apartment', branch: 'development'
+gem "apartment", "~> 2.2"
 
 # Authentication
 gem 'devise', '~> 4'
@@ -56,10 +55,10 @@ gem 'pundit', '~> 1'
 gem 'rolify', '~> 5'
 
 # Soft deletes for ActiveRecord done right
-gem 'discard'
+gem "discard", "~> 1"
 
 # Pretty admin dashboards
-gem 'administrate', '~> 0.9'
+gem "administrate", "~> 0.9"
 
 gem 'receipts'
 # Stripe stuff
