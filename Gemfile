@@ -94,6 +94,8 @@ gem 'flipper'
 gem 'flipper-ui'
 gem 'flipper-redis'
 
+gem 'counter_culture', '~> 1.11'
+
 group :development do
   gem 'haml-lint', require: false
   gem 'listen', '>= 3.0.5', '< 3.2'
