@@ -52,7 +52,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 
 ## Notes
 * RSpec controller tests have been omitted in favour of requests tests.
-* You can run tests locally with `docker-compose run website rspec`
+* You can run tests locally with `docker-compose run web rspec`
 * Because this is a boilerplate, there are no migrations. Rely on schema.rb and use `rails db:setup` to create the db and seed.
 
 ## Getting Started
@@ -60,7 +60,7 @@ The gemset has been chosen to be modern, performant, and take care of a number o
 * Customize .env from .env-example
 * run `docker-compose run webpacker yarn install --pure-lockfile` to install all node modules.
 * run `docker-compose up --build` to create and run the various images, volumes, containers and a network
-* run `docker-compose exec website rails db:setup` to create DB, load schema and seed. Seeding will also create your plan(s) in Stripe.
+* run `docker-compose exec web rails db:setup` to create DB, load schema and seed. Seeding will also create your plan(s) in Stripe.
 * Visit lvh.me:3000 and rejoice
 
 ### Bonus points
