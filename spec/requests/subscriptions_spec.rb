@@ -2,6 +2,8 @@ require 'rails_helper'
 require 'stripe_mock'
 
 RSpec.describe SubscriptionsController, type: :request do
+  include CurrencyHelper
+
   let(:stripe_helper) { StripeMock.create_test_helper }
   before do
     StripeMock.start
@@ -49,7 +51,9 @@ RSpec.describe SubscriptionsController, type: :request do
 
       it 'shows next payment' do
         expect(subject.body).to include 'Your card will be charged'
-        expect(subject.body).to include account_subscribed.plan_cost
+        account_subscribed.reload
+        next_payment = formatted_amount(account_subscribed.plan_amount * account_subscribed.active_users_count, account_subscribed.plan_currency)
+        expect(subject.body).to include next_payment
         expect(subject.body).to include "on #{account_subscribed.current_period_end.strftime('%A, %B %e, %Y')}"
       end
     end

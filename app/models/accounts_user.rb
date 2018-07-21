@@ -5,6 +5,7 @@ class AccountsUser < ApplicationRecord
   # required for validation despite accepts_nested_attributes_for
   # https://github.com/rails/rails/issues/25198#issuecomment-372894070
   belongs_to :account, inverse_of: :accounts_users, optional: true
+  counter_culture :account, column_name: :active_users_count, delta_magnitude: proc { |model| model.active? ? 1 : 0 }
   belongs_to :user, autosave: true, inverse_of: :accounts_users
 
   accepts_nested_attributes_for :user
@@ -28,5 +29,10 @@ class AccountsUser < ApplicationRecord
     Apartment::Tenant.switch('public') do
       self.has_role? role
     end
+  end
+
+  def active?
+    !discarded? \
+    && user.invitation_accepted_at.present?
   end
 end

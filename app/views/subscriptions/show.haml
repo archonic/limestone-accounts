@@ -30,10 +30,10 @@
         .col-md
           %h3.mt-3.mb-3 Next Payment
           %p
-            = "You have #{@account.active_users.count} #{'active member'.pluralize(@account.active_users.count)}."
+            = "You have #{@account.active_users_count} #{'active member'.pluralize(@account.active_users_count)}."
             Your card will be charged
             %span{ data: { toggle: 'tooltip' }, title: 'This does not reflect proration or credits from plan switching or adding/removing users', style: 'color: blue;' }
-              = formatted_amount(@account.plan_amount * @account.active_users.count, @account.plan_currency)
+              = formatted_amount(@account.plan_amount * @account.active_users_count, @account.plan_currency)
             = "on #{@account.current_period_end.strftime('%A, %B %e, %Y')}."
 
     %hr

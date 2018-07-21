@@ -18,7 +18,7 @@ class SubscriptionService
       subscription = customer.subscriptions.create(
         source: @params[:stripeToken],
         plan: stripe_plan.id,
-        quantity: @account.active_users.count
+        quantity: @account.active_users_count
       )
     end
     return false if subscription.nil?
@@ -47,7 +47,7 @@ class SubscriptionService
       subscription.items = [{
         id: subscription.items.data[0].id,
         plan: plan_stripe_id,
-        quantity: @account.active_users.count
+        quantity: @account.active_users_count
       }]
       subscription.save
     end

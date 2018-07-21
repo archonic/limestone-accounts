@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.boolean "cancelled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "active_users_count", null: false, default: 0
     t.datetime "discarded_at"
     t.index ["cancelled"], name: "index_accounts_on_cancelled"
     t.index ["current_period_end"], name: "index_accounts_on_current_period_end"
