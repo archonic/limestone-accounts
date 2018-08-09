@@ -6,28 +6,7 @@ Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opi
 Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
 
 ## The Stack
-The gemset has been chosen to be modern, performant, and take care of a number of business concerns common to SaaS.
-* Administrate
-* Apartment
-* Bootstrap 4
-* CoffeeScript
-* Devise
-* Devise Invitable
-* Discard
-* Flipper
-* HAML
-* jQuery
-* Postgres
-* Pretender
-* Pundit
-* Rspec (w/ shoulda_matchers, database_cleaner)
-* Rolify
-* Searchkick
-* Shrine
-* Sidekiq
-* Simple Form
-* Stripe (w/ stripe-ruby-mock, stripe_event)
-* Turbolinks 5
+The [gemset](https://github.com/archonic/limestone-accounts/blob/master/Gemfile) has been chosen to be modern, performant, and take care of a number of business concerns common to SaaS.
 
 ## Features
 * Free trial begins upon registration without credit card.
