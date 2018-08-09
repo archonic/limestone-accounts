@@ -75,7 +75,7 @@ RSpec.describe SubscriptionsController, type: :request do
       before do
         host! "#{account_no_subscription.subdomain}.lvh.me"
         sign_in user_no_subscription
-        Apartment::Tenant.switch('public') { user_no_subscription.accounts_user(account_no_subscription).add_role :admin }
+        Apartment::Tenant.switch('public') { user_no_subscription.accounts_user(account_no_subscription).role = "admin" }
       end
       it 'redirects to root with access denied' do
         expect(subject).to redirect_to subscribe_path

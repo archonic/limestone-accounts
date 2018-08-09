@@ -15,20 +15,14 @@ class AccountsUser < ApplicationRecord
     message: 'User already exists in this account.'
   }
 
-  scope :admins, -> { Apartment::Tenant.switch('public') { AccountsUser.with_role(:admin) } }
-
   delegate :email, to: :user
   delegate :name, to: :user
   delegate :avatar, to: :user
 
   def owner?
-    Apartment::Tenant.switch('public') { account.owner_au == self }
-  end
-
-  def public_has_role?(role)
-    Apartment::Tenant.switch('public') do
-      self.has_role? role
-    end
+    # NB Why do we need reload here?
+    # will always return true if removed.
+    account.reload.owner_au == self
   end
 
   def active?

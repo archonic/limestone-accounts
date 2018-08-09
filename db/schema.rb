@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.integer "account_id", null: false
     t.integer "user_id", null: false
     t.datetime "discarded_at"
+    t.integer "role", null: false, default: 1
     t.index ["account_id", "user_id"], name: "index_accounts_users_on_account_id_and_user_id", unique: true
     t.index ["discarded_at"], name: "index_accounts_users_on_discarded_at"
   end

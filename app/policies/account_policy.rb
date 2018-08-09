@@ -1,6 +1,6 @@
 class AccountPolicy < ApplicationPolicy
   def show?
-    accounts_user.public_has_role? :admin
+    accounts_user.admin?
   end
 
   def create?
@@ -8,7 +8,7 @@ class AccountPolicy < ApplicationPolicy
   end
 
   def update?
-    accounts_user.public_has_role? :admin
+    accounts_user.admin?
   end
 
   def destroy?

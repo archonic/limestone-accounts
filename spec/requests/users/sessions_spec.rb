@@ -1,13 +1,11 @@
 require 'rails_helper'
 
+# NOTE Only bothered testing custom methods. Don't need to test Devise itself.
 RSpec.describe Users::SessionsController, type: :request do
-  # NOTE Only bothered testing custom methods. Don't need to test Devise itself.
-
-  let(:au_1) { create(:accounts_user) }
+  let(:au_1) { create(:accounts_user, :admin) }
   let(:account_1) { au_1.account }
   let(:user_1) { au_1.user }
-
-  let(:au_2) { create(:accounts_user, user: user_1) }
+  let!(:au_2) { create(:accounts_user, user: user_1) }
   let(:account_2) { au_2.account }
 
   before do

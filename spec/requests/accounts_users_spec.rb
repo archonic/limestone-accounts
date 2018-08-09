@@ -14,15 +14,12 @@ RSpec.describe AccountsController, type: :request do
   let(:account) { au.account }
   let(:user) { au.user }
 
-  let(:admin_au) { create(:accounts_user, account: account) }
+  let(:admin_au) { create(:accounts_user, :admin, account: account) }
   let(:admin) { admin_au.user }
 
   let(:delete_au) { create(:accounts_user, account: account) }
 
   before do
-    Apartment::Tenant.switch('public') do
-      admin_au.add_role :admin
-    end
     host! "#{account.subdomain}.lvh.me:3000"
   end
 

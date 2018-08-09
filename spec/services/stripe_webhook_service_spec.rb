@@ -6,11 +6,9 @@ RSpec.describe StripeWebhookService, type: :service do
   before do
     StripeMock.start
     stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, currency: 'usd', trial_period_days: $trial_period_days)
-    au_subscribed.add_role :admin
   end
   after { StripeMock.stop }
-
-  let!(:au_subscribed) { create(:accounts_user, :subscribed) }
+  let!(:au_subscribed) { create(:accounts_user, :subscribed, :admin) }
   let(:account_subscribed) { au_subscribed.account }
   let(:user_subscribed) { au_subscribed.user }
   let(:mock_customer) { Stripe::Customer.create }

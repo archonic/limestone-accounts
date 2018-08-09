@@ -1,28 +1,27 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Users::InvitationsController, type: :request do
-  let!(:au) { create(:accounts_user, :subscribed) }
+  let!(:au) { create(:accounts_user, :subscribed, :admin) }
   let(:account) { au.account }
-  let(:user) { au.user }
+  let(:admin) { au.user }
   let(:email_valid) { Faker::Internet.email }
-  let(:email_invalid) { 'nope' }
+  let(:email_invalid) { "nope" }
 
-  describe '#create' do
+  describe "#create" do
     before do
-      Apartment::Tenant.switch('public') { au.add_role :admin }
       host! "#{account.subdomain}.lvh.me"
-      sign_in user
+      sign_in admin
     end
     subject do
       post user_invitation_path, params: { user: { email: email_valid } }
       response
     end
 
-    it 'calls mass_invite!' do
+    it "calls mass_invite!" do
       allow(UserInvitationService).to receive(:mass_invite!).with(
         account,
         [email_valid],
-        user
+        admin
       ).and_return({
         users_failed: [],
         users_successful: [User.new(email: email_valid)]
@@ -30,25 +29,25 @@ RSpec.describe Users::InvitationsController, type: :request do
       expect(UserInvitationService).to receive(:mass_invite!).with(
         account,
         [email_valid],
-        user
+        admin
       ).once
       subject
     end
 
-    context 'with a valid email' do
-      it 'succeeds' do
+    context "with a valid email" do
+      it "succeeds" do
         subject
         expect(flash[:success]).to match /successfully invited./
         expect(flash[:error]).to be_nil
       end
     end
 
-    context 'with an invalid email' do
+    context "with an invalid email" do
       subject do
         post user_invitation_path, params: { user: { email: email_invalid } }
       end
 
-      it 'fails' do
+      it "fails" do
         subject
         expect(flash[:success]).to be_nil
         expect(flash[:emails_failed]).to eq [email_invalid]

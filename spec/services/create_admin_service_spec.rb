@@ -9,18 +9,19 @@ RSpec.describe CreateAdminService, type: :service do
   describe '#call' do
     before do
       create(:plan)
-      create(:account, subdomain: 'limestone')
+      create(:account, subdomain: "limestone")
     end
+
+    let(:account) { Account.find_by(subdomain: "limestone") }
 
     it 'creates the admin' do
       expect(User.count).to eq 0
       CreateAdminService.call
       expect(User.count).to eq 1
-      expect(User.first.reload.super_admin?).to be true
+      expect(account.users.first.reload.super_admin?).to be true
       Apartment::Tenant.switch('public') do
-        expect(User.first.accounts_users.first.reload.has_role?(:admin)).to be true
+        expect(account.accounts_users.first.reload.admin?).to be true
       end
-
     end
   end
 end

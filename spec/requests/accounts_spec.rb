@@ -59,7 +59,7 @@ RSpec.describe AccountsController, type: :request do
       it 'assigns admin role and populates invitation_accepted_at for owner' do
         subject
         owner = Account.find_by(subdomain: 'subdomain').owner
-        expect(owner.has_role? :admin).to eq true
+        expect(owner.admin?).to eq true
         expect(owner.user.invitation_accepted_at).to be_present
       end
 
@@ -86,11 +86,10 @@ RSpec.describe AccountsController, type: :request do
   end
 
   describe '#destroy' do
-    let!(:au) { create(:accounts_user, :subscribed) }
+    let!(:au) { create(:accounts_user, :subscribed, :admin) }
     let(:account) { au.account }
     let(:user) { au.user }
     before do
-      Apartment::Tenant.switch('public') { au.add_role :admin }
       host! "#{account.subdomain}.lvh.me:3000"
       sign_in user
     end

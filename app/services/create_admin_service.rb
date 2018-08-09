@@ -15,7 +15,7 @@ class CreateAdminService
       account_id: account.id
     )
     Apartment::Tenant.switch('public') do
-      admin_au.add_role :admin
+      admin_au.update_column :role, "admin"
     end
     admin_user
   end

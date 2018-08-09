@@ -1,5 +1,5 @@
 class InvitationPolicy < ApplicationPolicy
   def create?
-    accounts_user.public_has_role? :admin
+    accounts_user.admin?
   end
 end

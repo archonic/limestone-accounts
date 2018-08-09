@@ -46,6 +46,7 @@ The [gemset](https://github.com/archonic/limestone-accounts/blob/master/Gemfile)
 * Login as the admin user that was created (from .env)
 * Visit /admin/flipper
 * Create the feature `public_registration` and enable it. Now anyone can register :clap:
+* You'll probably want to change the `role` enum on the accounts_user model, and the default role in schema.rb.
 
 ### Setting up production
 A wiki will be written about this.

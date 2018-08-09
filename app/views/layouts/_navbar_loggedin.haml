@@ -15,7 +15,7 @@
   #nav_loggedin.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
       %li.nav-item= link_to 'Dashboard', dashboard_path, class: 'nav-link'
-      - if current_accounts_user.public_has_role? :admin
+      - if current_accounts_user.admin?
         %li.nav-item= link_to 'Account', accounts_path, class: 'nav-link'
     %ul.navbar-nav.ml-auto
       .li.nav-item.dropdown
