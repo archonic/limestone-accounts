@@ -4,5 +4,5 @@
 %p
   Contact the account owner,
   %strong
-    = "#{@account.owner.try(:full_name)} <#{@account.owner.try(:email)}>"
+    = "#{@account.owner.try(:name)} <#{@account.owner.try(:email)}>"
   for more information

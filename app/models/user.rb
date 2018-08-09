@@ -30,6 +30,10 @@ class User < ApplicationRecord
     self.accounts_users.find_by(account: account)
   end
 
+  def name
+    full_name || email
+  end
+
   # Allows features to be flipped for individuals
   def flipper_id
     "User;#{id}"
@@ -57,15 +61,10 @@ class User < ApplicationRecord
 
   private
 
-    def set_full_name
-      # Since we take a comma delimited list of emails for invites, we don't have name data.
-      # Set 'Invited Member' until they fill it out when accepting.
-      self.full_name = if first_name.nil? && last_name.nil? && being_invited?
-        'Invited Member'
-      else
-        [first_name, last_name].join(' ').strip
-      end
-    end
+  def set_full_name
+    self.full_name = [first_name, last_name].join(' ').strip
+    self.full_name = nil if full_name.empty?
+  end
 
     def being_invited?
       !!@being_invited

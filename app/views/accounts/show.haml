@@ -20,7 +20,7 @@
                 .row
                   .col-8
                     %h5.mt-0
-                      = member.full_name
+                      = member.name
                       = content_tag(:span, 'Removed', class: 'badge badge-secondary') if member.discarded?
                     %p= member.email
                   .col-4.text-right
