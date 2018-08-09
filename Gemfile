@@ -51,8 +51,6 @@ gem 'devise', '~> 4'
 gem 'devise_invitable', '~> 1.7'
 # Authorization
 gem 'pundit', '~> 1'
-# Roles w/resource scoping
-gem 'rolify', '~> 5'
 
 # Soft deletes for ActiveRecord done right
 gem "discard", "~> 1"
