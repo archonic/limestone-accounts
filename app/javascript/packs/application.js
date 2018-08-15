@@ -13,15 +13,22 @@ window.$ = window.jQuery = require('jquery');
 import 'bootstrap'
 
 import Rails from 'rails-ujs';
-import Turbolinks from 'turbolinks';
 Rails.start();
+window.Rails = Rails;
+import Turbolinks from 'turbolinks';
+window.Turbolinks = Turbolinks;
 Turbolinks.start();
+
+import { Application } from "stimulus"
+import { definitionsFromContext } from "stimulus/webpack-helpers"
+const application = Application.start()
+const context = require.context("./controllers", true, /\.js$/)
+application.load(definitionsFromContext(context))
 
 import * as ActiveStorage from "activestorage"
 ActiveStorage.start()
 
 // Does not process requires when imported like this
-import '../../assets/javascripts/application'
 import '../packs/src/subscriptions'
 import '../packs/src/modals'
 import '../packs/src/global'
