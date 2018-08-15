@@ -13,7 +13,7 @@ gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.11'
 
 # Use Rack Timeout. Read more: https://github.com/heroku/rack-timeout
-gem 'rack-timeout', '~> 0.4'
+gem "rack-timeout", "~> 0.4"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5'
@@ -45,6 +45,7 @@ gem "simple_form", "~> 4"
 
 # Multi-tennancy
 gem "apartment", "~> 2.2"
+gem "apartment-sidekiq", "~> 1.2"
 
 # Authentication
 gem 'devise', '~> 4'
