@@ -26,6 +26,6 @@ module ApplicationHelper
   end
 
   def active_class(path)
-    current_page?(path) ? ' active' : ''
+    current_page?(path) ? " active" : ""
   end
 end
