@@ -1,4 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
+@import '../../../assets/stylesheets/variables';
 
 $fa-font-path: "~font-awesome/fonts";
 @import '~font-awesome/scss/font-awesome';
@@ -6,5 +7,6 @@ $fa-font-path: "~font-awesome/fonts";
 @import '../../../assets/stylesheets/stripe';
 @import '../../../assets/stylesheets/avatars';
 @import '../../../assets/stylesheets/modals';
+@import '../../../assets/stylesheets/notifications';
 @import '../../../assets/stylesheets/alerts';
 @import '../../../assets/stylesheets/application';

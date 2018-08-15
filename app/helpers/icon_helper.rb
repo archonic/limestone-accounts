@@ -1,5 +1,5 @@
 module IconHelper
-  AVATAR_SIZES = {xs: 9, sm: 18, md: 36, lg: 72, xl: 144}.freeze
+  AVATAR_SIZES = {xs: 16, sm: 24, md: 48, lg: 72, xl: 144}.freeze
 
   def avatar(user, size = :sm, options = {})
     width = AVATAR_SIZES[size]

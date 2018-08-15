@@ -1,0 +1,44 @@
+// Tweak bootstrap variables
+$blue:    #4aa4ed !default;
+$indigo:  #845fe4 !default;
+$purple:  #8870bf !default;
+$pink:    #e66aa3 !default;
+$red:     #d4576a !default;
+$orange:  #f28e5c !default;
+$yellow:  #f7c162 !default;
+$green:   #4da65f !default;
+$teal:    #57cea1 !default;
+$cyan:    #4db1b4 !default;
+$white:   #ffffff !default;
+$gray-100:#f8f9fa !default;
+$gray-300:#eff3f6 !default;
+$gray-600:#6c757d !default;
+$gray-800:#343a40 !default;
+
+$colors: (
+  blue: $blue,
+  indigo: $indigo,
+  purple: $purple,
+  pink: $pink,
+  red: $red,
+  orange: $orange,
+  yellow: $yellow,
+  green: $green,
+  teal: $teal,
+  cyan: $cyan,
+  white: $white,
+  gray-light: $gray-100,
+  gray: $gray-600,
+  gray-dark: $gray-800
+) !default;
+
+$theme-colors: (
+  primary: $blue,
+  secondary: $gray-300,
+  success: $green,
+  info: $cyan,
+  warning: $yellow,
+  danger: $red,
+  light: $gray-100,
+  dark: $gray-800
+) !default;
