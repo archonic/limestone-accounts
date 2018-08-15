@@ -20,7 +20,9 @@ Apartment.configure do |config|
     Plan
   )
 
-  # config.tenant_names = lambda { Account.pluck :subdomain }
+  # Migrate tenants when running migrations
+  config.tenant_names = lambda { Account.pluck :subdomain }
+  config.db_migrate_tenants = true
 
   # PostgreSQL: Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   config.use_schemas = true
@@ -34,7 +36,7 @@ Apartment.configure do |config|
   # There are cases where you might want some schemas to always be in your search_path
   # e.g when using a PostgreSQL extension like hstore.
   # Any schemas added here will be available along with your selected Tenant.
-  # config.persistent_schemas = %w{ hstore }
+  config.persistent_schemas = %w( shared_extensions )
 end
 
 Apartment::Elevators::Subdomain.excluded_subdomains = %w( www app admin secure public mail pop smtp ssl sftp ).freeze
