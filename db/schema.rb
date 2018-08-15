@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_08_005357) do
+ActiveRecord::Schema.define(version: 2018_08_09_225243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,22 +32,22 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.boolean "cancelled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "active_users_count", null: false, default: 0
+    t.integer "active_users_count", default: 0, null: false
     t.datetime "discarded_at"
     t.index ["cancelled"], name: "index_accounts_on_cancelled"
     t.index ["current_period_end"], name: "index_accounts_on_current_period_end"
+    t.index ["discarded_at"], name: "index_accounts_on_discarded_at"
     t.index ["name"], name: "index_accounts_on_name"
     t.index ["past_due"], name: "index_accounts_on_past_due"
     t.index ["subdomain"], name: "index_accounts_on_subdomain", unique: true
     t.index ["unpaid"], name: "index_accounts_on_unpaid"
-    t.index ["discarded_at"], name: "index_accounts_on_discarded_at"
   end
 
   create_table "accounts_users", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "user_id", null: false
     t.datetime "discarded_at"
-    t.integer "role", null: false, default: 1
+    t.integer "role", default: 1, null: false
     t.index ["account_id", "user_id"], name: "index_accounts_users_on_account_id_and_user_id", unique: true
     t.index ["discarded_at"], name: "index_accounts_users_on_discarded_at"
   end
@@ -94,6 +94,20 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
     t.index ["stripe_id"], name: "index_invoices_on_stripe_id", unique: true
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "recipient_id"
+    t.string "action"
+    t.string "notifiable_type"
+    t.bigint "notifiable_id"
+    t.string "target_name_cached"
+    t.json "target_path_params"
+    t.boolean "read", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.string "name", null: false
     t.integer "amount", null: false
@@ -105,9 +119,9 @@ ActiveRecord::Schema.define(version: 2018_03_08_005357) do
 
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", null: false
-    t.string "first_name", null: true
-    t.string "last_name", null: true
-    t.string "full_name", null: true
+    t.string "first_name"
+    t.string "last_name"
+    t.string "full_name"
     t.string "encrypted_password"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"

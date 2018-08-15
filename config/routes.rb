@@ -75,6 +75,11 @@ Rails.application.routes.draw do
       patch 'avatars', to: 'avatars#update'
       delete 'avatar', to: 'avatars#destroy'
 
+      # Notifications
+      get "notifications", to: "notifications#index"
+      get "notifications/dropdown", to: "notifications#dropdown", as: "notifications_dropdown"
+      post "notification_read/:id", to: "notifications#read", as: "notification_read"
+
       # Subscription stuff
       get 'billing', to: 'subscriptions#show'
       get 'subscribe', to: 'subscriptions#new'

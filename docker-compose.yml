@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  cable:
+    depends_on:
+      - 'redis'
+    build: .
+    command: puma -p 28080 cable/config.ru
+    ports:
+      - '28080:28080'
+    volumes:
+      - '.:/app'
+    env_file:
+      - '.env'
+
   postgres:
     image: 'postgres:10-alpine'
     environment:
@@ -22,10 +34,22 @@ services:
       # https://github.com/docker-library/redis/issues/35
       net.core.somaxconn: '511'
 
+  sidekiq:
+    depends_on:
+      - 'postgres'
+      - 'redis'
+    build: .
+    command: sidekiq -C config/sidekiq.yml.erb
+    volumes:
+      - '.:/app'
+    env_file:
+      - '.env'
+
   web:
     depends_on:
       - 'postgres'
       - 'redis'
+      - 'webpack'
     build: .
     tty: true
     stdin_open: true
@@ -40,36 +64,14 @@ services:
     build: .
     env_file:
       - '.env'
-    command: ./bin/webpack-dev-server --inline true
+    command: ./bin/webpack-dev-server
     volumes:
       - '.:/app'
     ports:
       - '3035:3035'
 
-  sidekiq:
-    depends_on:
-      - 'postgres'
-      - 'redis'
-    build: .
-    command: sidekiq -C config/sidekiq.yml.erb
-    volumes:
-      - '.:/app'
-    env_file:
-      - '.env'
-
-  cable:
-    depends_on:
-      - 'redis'
-    build: .
-    command: puma -p 28080 cable/config.ru
-    ports:
-      - '28080:28080'
-    volumes:
-      - '.:/app'
-    env_file:
-      - '.env'
-
 volumes:
   redis:
   postgres:
-  webpacker:
+  web:
+  webpack:

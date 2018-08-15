@@ -1,0 +1,9 @@
+.dropdown-item{id: "notification_#{notification.id}"}
+  .row
+    .col-10
+      - partial_path = "notifications/#{notification.notifiable_type.underscore.pluralize}/#{notification.action}"
+      = render partial: partial_path, locals: { notification: notification }
+    .col-2.align-self-center
+      = form_tag notification_read_path(notification), class: "pull-right", remote: true do
+        = button_tag(class: "btn btn-link") do
+          = icon("check", :xs)

@@ -10,10 +10,11 @@
         %meta{ name: "action-cable-url", content: "wss://#{current_account.subdomain}.example.com:28080/ws" }
       - else
         %meta{ name: "action-cable-url", content: "ws://#{current_account.subdomain}.lvh.me:28080/ws" }
-    = action_cable_meta_tag
+    - if user_signed_in?
+      %meta{ name: "current-user", data: { id: current_user.id, name: current_user.name, email: current_user.email, avatar: avatar_url(current_user, "40x40") } }
     = tag :meta, name: "stripe-public-key", content: ENV["STRIPE_PUBLISHABLE_KEY"]
-    = javascript_pack_tag "vendor"
-    = javascript_pack_tag "application"
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application'
     = stylesheet_pack_tag "src/application"
 
     = csrf_meta_tags

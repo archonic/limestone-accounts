@@ -1,11 +1,18 @@
+default: &default
+  schema_search_path: "public,shared_extensions"
+
 development:
+  <<: *default
   url: <%= ENV['DATABASE_URL'].gsub('?', '_development?') %>
 
 test:
+  <<: *default
   url: <%= ENV['DATABASE_URL'].gsub('?', '_test?') %>
 
 staging:
+  <<: *default
   url: <%= ENV['DATABASE_URL'].gsub('?', '_staging?') %>
 
 production:
+  <<: *default
   url: <%= ENV['DATABASE_URL'].gsub('?', '_production') %>

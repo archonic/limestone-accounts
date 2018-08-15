@@ -1,0 +1,13 @@
+.row.small.px-2.mb-1
+  .col-auto.mr-auto
+    Notifications
+  .col-auto
+    = link_to 'Settings', '#settings'
+.dropdown-divider.mb-0
+#notifications
+  - @notifications.each do |notification|
+    - cache notification do
+      = render partial: "notifications/notification_dropdown_item", locals: { notification: notification }
+  #empty_notice.mt-2{class: @notifications.any? ? 'd-none' : '' }
+    %p.small.font-italic.text-muted.text-center
+      No notifications. Good job!

@@ -1,0 +1,8 @@
+= link_to notification.target, class: "" do
+  %small.text-muted Example notification
+  %br
+  %span.text-link= notification.target_name_cached
+  %br
+  %small.text-muted
+    = icon('send-o', :xs)
+    = time_ago_in_words(notification.created_at)

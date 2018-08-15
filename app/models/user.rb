@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :accounts, through: :accounts_users
   has_one_attached :avatar
 
+  has_many :notifications_sent, class_name: "Notification", foreign_key: "sender_id", dependent: :destroy
+  has_many :notifications_received, class_name: "Notification", foreign_key: "recipient_id", dependent: :destroy
+
+  # NOTE for the sake of the example seen in app/models/notification.rb
+  # You can remove this if users are not notifiables
+  has_many :notifications, as: :notifiable
+
   accepts_nested_attributes_for :accounts_users, reject_if: :all_blank
 
   validates :email, presence: true
