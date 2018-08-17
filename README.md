@@ -1,9 +1,9 @@
 # Limestone Accounts
 [ ![Codeship Status for archonic/limestone-accounts](https://app.codeship.com/projects/eb53d150-02ea-0136-1806-3ebecea35641/status?branch=master)](https://app.codeship.com/projects/280180)
 
-Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker). The opinions stop short of choosing a front-end framework like [React](https://facebook.github.io/react/) or [Vue](https://vuejs.org/), so you can use what you like. This is a work in progress.
+Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker) and [Stimulus](https://stimulusjs.org/).
 
-Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
+Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users through invitations. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
 
 ## The Stack
 The [gemset](https://github.com/archonic/limestone-accounts/blob/master/Gemfile) has been chosen to be modern, performant, and take care of a number of business concerns common to SaaS.
@@ -23,7 +23,8 @@ The [gemset](https://github.com/archonic/limestone-accounts/blob/master/Gemfile)
 * Persistent banner with link to billing page for accounts that are past due.
 * Opinionated search integration using Elasticsearch via Searchkick. Gem is in place but integration is up to you.
 * Feature control using the flipper gem. Demonstrated with public_registration.
-* 89% RSpec test coverage.
+* Notifications with ActionCable. See console example in app/models/notification.rb.
+* 88% RSpec test coverage.
 
 ## Roadmap
 * In-browser image cropping using jcrop or the likes.
