@@ -3,16 +3,6 @@
 class NotificationsController < ApplicationController
   before_action :set_notification, only: %i(read)
 
-  def index
-    authorize :notification
-    unread = if index_params[:type].nil?
-      true
-    else
-      index_params[:type] == "unread" ? true : false
-    end
-    @notifications = unread ? policy_scope(Notification).unread : policy_scope(Notification)
-  end
-
   def dropdown
     authorize :notification
     @notifications =  current_user

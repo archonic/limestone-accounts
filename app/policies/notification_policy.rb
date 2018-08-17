@@ -1,20 +1,8 @@
 # frozen_string_literal: true
 
 class NotificationPolicy < ApplicationPolicy
-  def index?
-    true
-  end
-
-  def all_notifications?
-    index?
-  end
-
   def dropdown?
-    index?
-  end
-
-  def show?
-    record.recipient == user
+    true
   end
 
   def create?
