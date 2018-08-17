@@ -6,7 +6,6 @@ RSpec.describe ApplicationCable::Connection, type: :channel do
   let(:user) { au.user }
 
   it "successfully connects" do
-    binding.pry
     connect "/ws", cookies: {
       "user.id" => user.id,
       "user.expires_at" => 5.minutes.from_now
