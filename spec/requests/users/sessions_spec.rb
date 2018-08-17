@@ -2,11 +2,11 @@ require 'rails_helper'
 
 # NOTE Only bothered testing custom methods. Don't need to test Devise itself.
 RSpec.describe Users::SessionsController, type: :request do
-  let(:au_1) { create(:accounts_user, :admin) }
-  let(:account_1) { au_1.account }
+  let(:account_1) { create(:account, subdomain: 'alpha') }
+  let!(:au_1) { create(:accounts_user, :admin, account: account_1) }
   let(:user_1) { au_1.user }
-  let!(:au_2) { create(:accounts_user, user: user_1) }
-  let(:account_2) { au_2.account }
+  let(:account_2) { create(:account, subdomain: 'beta') }
+  let!(:au_2) { create(:accounts_user, :admin, account: account_2, user: user_1) }
 
   before do
     host! 'lvh.me:3000'
