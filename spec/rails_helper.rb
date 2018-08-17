@@ -12,6 +12,7 @@ require File.expand_path('../../config/environment', __FILE__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'shoulda/matchers'
+require "action_cable/testing/rspec"
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -64,6 +65,8 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include RequestSpecHelper, type: :request
+  # TODO how do I include channel tests in rspec suite?
+  # config.include RequestSpecHelper, type: :channel
 end
 
 Shoulda::Matchers.configure do |config|

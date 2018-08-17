@@ -6,6 +6,7 @@ development: &default
 
 test:
   <<: *default
+  adapter: test
 
 staging:
   <<: *default

@@ -117,6 +117,7 @@ group :development, :test do
   gem 'pry'
   gem 'rails-controller-testing', '~> 1'
   gem 'rspec-rails', '~> 3.6'
+  gem 'action-cable-testing', '~> 0.3'
   gem 'selenium-webdriver'
   gem 'stripe-ruby-mock', github: 'archonic/stripe-ruby-mock', require: 'stripe_mock'
 end

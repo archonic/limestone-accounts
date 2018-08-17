@@ -10,6 +10,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    action-cable-testing (0.3.1)
+      actioncable (~> 5.0)
     actioncable (5.2.1)
       actionpack (= 5.2.1)
       nio4r (~> 2.0)
@@ -432,6 +434,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing (~> 0.3)
   administrate (~> 0.9)
   apartment (~> 2.2)
   apartment-sidekiq (~> 1.2)
