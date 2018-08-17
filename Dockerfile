@@ -16,6 +16,12 @@ RUN yarn --pure-lockfile
 
 COPY . .
 
+# Make compiled assets a part of image. Aides in production deploy and testing.
+ENV SECRET_KEY_BASE juststarttheserver
+ENV DATABASE_URL postgresql://just@start:5432/theserver
+ENV REDIS_BASE_URL redis://please:6379/0
+RUN RAILS_ENV=production bundle exec rake assets:precompile
+
 # Replace this with yourself
 LABEL maintainer="Joshua Flark <joshuajmark@gmail.com>"
 
