@@ -11,13 +11,13 @@ RSpec.describe SubscriptionsController, type: :request do
   end
   after { StripeMock.stop }
 
-  let!(:au_no_subscription) { create(:accounts_user) }
-  let(:account_no_subscription) { au_no_subscription.account }
-  let(:user_no_subscription) { au_no_subscription.user }
-
-  let!(:au_subscribed) { create(:accounts_user, :subscribed) }
-  let(:account_subscribed) { au_subscribed.account }
+  let(:account_subscribed) { create(:account, :subscribed, subdomain: 'alpha') }
+  let!(:au_subscribed) { create(:accounts_user, :admin, account: account_subscribed) }
   let(:user_subscribed) { au_subscribed.user }
+
+  let(:account_not_subscribed) { create(:account, subdomain: 'beta') }
+  let!(:au_not_subscribed) { create(:accounts_user, :admin, account: account_not_subscribed) }
+  let(:user_not_subscribed) { au_not_subscribed.user }
 
   describe 'GET billing_path' do
     subject do
@@ -27,11 +27,10 @@ RSpec.describe SubscriptionsController, type: :request do
 
     context 'as an account with no subscription' do
       before do
-        host! "#{account_no_subscription.subdomain}.lvh.me"
-        sign_in user_no_subscription
+        host! "#{account_not_subscribed.subdomain}.lvh.me"
+        sign_in user_not_subscribed
       end
 
-      # NOTE saw a transient failure here
       it 'redirects to subscribe page' do
         expect(subject).to redirect_to subscribe_path
       end
@@ -73,9 +72,9 @@ RSpec.describe SubscriptionsController, type: :request do
 
     context 'as an account with no subscription' do
       before do
-        host! "#{account_no_subscription.subdomain}.lvh.me"
-        sign_in user_no_subscription
-        Apartment::Tenant.switch('public') { user_no_subscription.accounts_user(account_no_subscription).role = "admin" }
+        host! "#{account_not_subscribed.subdomain}.lvh.me"
+        sign_in user_not_subscribed
+        Apartment::Tenant.switch('public') { user_not_subscribed.accounts_user(account_not_subscribed).role = "admin" }
       end
       it 'redirects to root with access denied' do
         expect(subject).to redirect_to subscribe_path
