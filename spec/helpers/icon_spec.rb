@@ -5,11 +5,11 @@ describe IconHelper do
 
   describe "avatar" do
     it "defaults to small" do
-      expect(avatar(user)).to match ";s=#{IconHelper::AVATAR_SIZES[:sm]}"
+      expect(avatar(user)).to match ";s=#{IconHelper::SIZES[:sm]}"
     end
 
     it "returns avatar" do
-      expect(avatar(user)).to match "circular-icon sm avatar-text"
+      expect(avatar(user)).to match "avatar-icon rounded sm avatar-text"
     end
 
     it "has text backup" do
@@ -19,7 +19,7 @@ describe IconHelper do
 
   describe 'icon' do
     it 'defaults to small' do
-      expect(icon(:beer)).to match "font-size: #{IconHelper::AVATAR_SIZES[:sm]}px"
+      expect(icon(:beer)).to match "font-size: #{IconHelper::SIZES[:sm]}px"
     end
 
     it 'returns a font awesome icon' do

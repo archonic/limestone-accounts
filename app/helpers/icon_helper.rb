@@ -1,43 +1,49 @@
 module IconHelper
-  AVATAR_SIZES = {xs: 16, sm: 24, md: 48, lg: 72, xl: 144}.freeze
+  SIZES = { xs: 12, sm: 16, md: 26, lg: 44, xl: 144, xxl: 230 }.freeze
 
-  def avatar(user, size = :sm, options = {})
-    width = AVATAR_SIZES[size]
-    resize_str = "#{width}x#{width}"
-    img_or_text = user.avatar.attached? ? 'img' : 'text'
-    image_url = if user.avatar.attached?
-      user.avatar.variant(resize: resize_str)
-    else
-      hash = Digest::MD5.hexdigest(user.email.try(:downcase) || 'noemail')
-      "https://secure.gravatar.com/avatar/#{hash}?d=blank&s=#{width}"
-    end
+  def avatar(resource, size = :sm, options = {})
+    width = SIZES[size]
+    img_or_text = resource.avatar.attached? ? 'img' : 'text'
+    image_url = avatar_url(resource, width)
     additional_classes = options[:class] || ''
-    circular_icon(
-      image_tag(
-        image_url,
-        class: 'rounded-circle'
-      ) + user.try(:name).try(:initials),
+    image = image_tag(image_url) if image_url.present?
+    avatar_icon(
+      [image, resource.try(:name).try(:initials)].join,
       style: size.to_s,
       class: "avatar-#{img_or_text} " + additional_classes,
-      alt: user.name
+      alt: resource.name
     )
   end
 
-  def circular_icon(content, options = {})
-    style = options.delete(:style) || 'md'
-    content_tag(
-      :span,
-      content,
-      options.merge!(
-        class: ['circular-icon', style, options[:class]].compact.join(' ')
-      )
-    )
+  def avatar_url(resource, width)
+    if resource.avatar.attached?
+      size_str = "#{width}x#{width}"
+      url_for( resource.avatar.variant(resize: size_str) )
+    elsif resource.respond_to? :email
+      hash = Digest::MD5.hexdigest(resource.email.try(:downcase) || 'noemail')
+      "https://secure.gravatar.com/avatar/#{hash}?d=blank&s=#{width}"
+    end
   end
 
   # https://fontawesome.com/v4.7.0/icons/
   def icon(reference, size = :sm, options = {})
-    options.merge!(style: "font-size: #{AVATAR_SIZES[size]}px")
+    options.merge!(style: "font-size: #{SIZES[size]}px")
     options.merge!(class: "fa fa-#{reference} #{options[:class]}")
     content_tag(:i, nil, options)
   end
+
+  private
+
+    def avatar_icon(content, options = {})
+      style = options.delete(:style) || 'md'
+      # rubocop:disable Rails/OutputSafety
+      content_tag(
+        :span,
+        raw(content),
+        options.merge!(
+          class: ['avatar-icon rounded', style, options[:class]].compact.join(' ')
+        )
+      )
+      # rubocop:enable Rails/OutputSafety
+    end
 end
