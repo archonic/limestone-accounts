@@ -1,17 +1,21 @@
 // Avatar sizes
-// xs: 16, sm: 24, md: 48, lg: 72, xl: 144
-$avatar-xs: 16px
-$avatar-sm: 24px
-$avatar-md: 48px
-$avatar-lg: 72px
+// xs: 12, sm: 16, md: 26, lg: 44, xl: 144, xxl: 230
+$avatar-xs: 12px
+$avatar-sm: 16px
+$avatar-md: 26px
+$avatar-lg: 44px
 $avatar-xl: 144px
+$avatar-xxl: 230px
 
 .avatar-text
   text-align: center
   background-color: $blue
   color: $white
 
-.circular-icon
+.circle-icon
+  border-radius: 50%
+
+.avatar-icon
   cursor: inherit
   display: inline-block
   font-weight: 400
@@ -60,6 +64,11 @@ $avatar-xl: 144px
     img
       width: $avatar-xl
       height: $avatar-xl
+  &.xxl
+    width: $avatar-xxl
+    height: $avatar-xxl
+    line-height: $avatar-xxl
+    font-size: $avatar-xxl/2
   img
     position: absolute
     top: 0

@@ -21,12 +21,12 @@
     .navbar-nav.ml-auto
       .nav-item.dropdown
         = link_to '#', class: 'nav-link dropdown-toggle', data: { toggle: "dropdown", controller: "notifications", "notifications-url": notifications_dropdown_path, "notifications-unread": current_user.notifications_received.unread.count }, role: "button", aria: { haspopup: true, expanded: false } do
-          = icon('bell-o')
+          = icon('bell-o', :md)
           #notifications_unread.badge.badge-pill.badge-info{ data: { target: "notifications.unread" }}...
         .dropdown-menu.dropdown-menu-right
           #notifications_container{ data: { target: "notifications.container" } }
       .nav-item.dropdown
-        = link_to avatar(current_user), '#', {class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': true, 'aria-expanded': false}
+        = link_to avatar(current_user, :md), '#', {class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': true, 'aria-expanded': false}
         .dropdown-menu.dropdown-menu-right
           = link_to 'Profile', edit_user_registration_path, class: 'dropdown-item'
           = link_to 'Super Admin', admin_root_path, class: 'dropdown-item' if current_user.super_admin?
