@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvoicePolicy < ApplicationPolicy
   def show?
     record.account == account

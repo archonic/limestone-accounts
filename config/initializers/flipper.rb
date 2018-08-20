@@ -1,14 +1,17 @@
-require 'flipper'
-require 'flipper/adapters/redis'
+# frozen_string_literal: true
+
+require "flipper"
+require "flipper/adapters/redis"
 
 # FEATURES:
 # public_registration
 
 Flipper.configure do |config|
   config.default do
-    client = Redis.new(url: "#{ENV['REDIS_BASE_URL']}flipper")
+    flipper_url = "#{ENV['REDIS_BASE_URL']}/flipper"
+    client = Redis.new(url: flipper_url)
     adapter = Flipper::Adapters::Redis.new(client)
-    $flipper = Flipper.new adapter
+    Flipper.new adapter
   end
 
   # TODO reinstate after roles are sorted

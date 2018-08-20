@@ -1,4 +1,6 @@
-require_relative 'production.rb'
+# frozen_string_literal: true
+
+require_relative "production.rb"
 
 Rails.application.configure do
   # Overwrite any production settings here, or if you want to start from

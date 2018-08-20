@@ -1,12 +1,14 @@
-class Account < ActiveRecord::Base
+# frozen_string_literal: true
+
+class Account < ApplicationRecord
   include Discard::Model
 
-  has_many :accounts_users, inverse_of: :account
+  has_many :accounts_users, inverse_of: :account, dependent: :destroy
   has_many :users, through: :accounts_users
   has_one :owner_au, -> {
     where(role: "admin").order(:id)
-  }, class_name: 'AccountsUser', inverse_of: :account
-  has_many :invoices
+  }, class_name: "AccountsUser", inverse_of: :account
+  has_many :invoices, dependent: :destroy
   # set optional: true if you don't want the default Rails 5 belongs_to presence validation
   belongs_to :plan
 
@@ -16,7 +18,7 @@ class Account < ActiveRecord::Base
   validates :subdomain,
     length: { in: 2..40 },
     uniqueness: true,
-    format: { with: /\A[a-zA-Z0-9\-]+\Z/i, message: 'accepts only letters, numbers and a dash.' },
+    format: { with: /\A[a-zA-Z0-9\-]+\Z/i, message: "accepts only letters, numbers and a dash." },
     if: :subdomain_changed?
 
   delegate :cost, to: :plan, prefix: true
@@ -31,7 +33,7 @@ class Account < ActiveRecord::Base
   after_create :create_tenant
 
   def owner
-    Apartment::Tenant.switch('public') { self.owner_au }
+    Apartment::Tenant.switch("public") { owner_au }
   end
 
   # Only checks that they have a source, not that they're in good standing
@@ -41,7 +43,7 @@ class Account < ActiveRecord::Base
 
   def trial_expired?
     trialing? &&
-    current_period_end < Time.current
+      current_period_end < Time.current
   end
 
   def inactive?
@@ -67,6 +69,6 @@ class Account < ActiveRecord::Base
     end
 
     def set_current_period_end
-      self.current_period_end = Time.now + $trial_period_days.days
+      self.current_period_end = Time.now.utc + TRIAL_PERIOD_DAYS.days
     end
 end

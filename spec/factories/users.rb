@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
@@ -15,8 +17,8 @@ FactoryBot.define do
     trait :invited do
       password nil
       password_confirmation nil
-      invitation_created_at Time.now
-      invitation_sent_at Time.now
+      invitation_created_at Time.now.utc
+      invitation_sent_at Time.now.utc
       invitation_accepted_at nil
     end
   end

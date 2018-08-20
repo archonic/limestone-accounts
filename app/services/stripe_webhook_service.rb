@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Manages all incoming stripe webhooks
 class StripeWebhookService
   def no_account_error(klass, account_stripe_customer_id)
@@ -16,19 +18,19 @@ class StripeWebhookService
 
   def process_subscription_status(subscription, account_attributes)
     case subscription.status
-    when 'trialing'
+    when "trialing"
       account_attributes[:trialing] = true
-    when 'active'
+    when "active"
       # Ensure unpaid/past_due/cancelled accounts resubscribing have right statuses
       account_attributes[:trialing]  = false
       account_attributes[:past_due]  = false
       account_attributes[:unpaid]    = false
       account_attributes[:cancelled] = false
-    when 'past_due'
+    when "past_due"
       account_attributes[:past_due] = true
-    when 'cancelled'
+    when "cancelled"
       account_attributes[:cancelled] = true
-    when 'unpaid'
+    when "unpaid"
       account_attributes[:unpaid] = true
     else
       StripeLogger.error "#{self.class.name} ERROR: Unknown subscription status #{subscription.status}."
@@ -51,12 +53,12 @@ class StripeWebhookService
         amount: event_data.total,
         currency: event_data.currency,
         number: event_data.number,
-        paid_at: Time.at(event_data.date).to_datetime,
+        paid_at: Time.at(event_data.date).utc.to_datetime,
         lines: lines
       )
       invoice.save
       UserMailer.invoice_paid(account.owner_au.user, invoice).deliver_later
-      return true
+      true
     end
   end
 
@@ -94,7 +96,7 @@ class StripeWebhookService
         elsif subscriptions.total_count == 1
           subscription = subscriptions.first
           process_subscription_status(subscription, account_attributes)
-          account_attributes[:current_period_end] = Time.at(subscription.current_period_end).to_datetime
+          account_attributes[:current_period_end] = Time.at(subscription.current_period_end).utc.to_datetime
         end
       else
         StripeLogger.error "UpdateCustomer ERROR: Customer #{event_data.id} has no subscription."
@@ -102,7 +104,7 @@ class StripeWebhookService
       account.update account_attributes
       # This event is fired on new trials. Only send email if the source is present.
       UserMailer.billing_updated(account.owner_au.user).deliver_later if sources.try(:total_count) == 1
-      return true
+      true
     end
   end
 
@@ -114,8 +116,9 @@ class StripeWebhookService
       no_account_error(self, subscription.customer) { return } if account.nil?
       account_attributes = {}
       process_subscription_status(subscription, account_attributes)
-      account_attributes[:current_period_end] = Time.at(subscription.current_period_end).to_datetime
+      account_attributes[:current_period_end] = Time.at(subscription.current_period_end).utc.to_datetime
       account.update(account_attributes)
+      true
     end
   end
 
@@ -125,7 +128,7 @@ class StripeWebhookService
       account = Account.find_by(stripe_customer_id: event_data.customer)
       no_account_error(self, event_data.customer) { return } if account.nil?
       UserMailer.trial_will_end(account.owner_au.user).deliver_later
-      return true
+      true
     end
   end
 
@@ -135,7 +138,7 @@ class StripeWebhookService
       account = Account.find_by(stripe_customer_id: card.customer)
       no_account_error(self, card.customer) { return } if account.nil?
       UserMailer.source_expiring(account.owner_au.user, card).deliver_later
-      return true
+      true
     end
   end
 
@@ -149,7 +152,7 @@ class StripeWebhookService
         event_data.attempt_count,
         event_data.next_payment_attempt.to_i
       ).deliver_later
-      return true
+      true
     end
   end
 end

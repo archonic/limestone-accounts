@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :accounts_user do
     association :account
@@ -9,7 +11,7 @@ FactoryBot.define do
     trait :user do
       role "user"
     end
-    
+
     trait :subscribed do
       association :account, :subscribed
     end

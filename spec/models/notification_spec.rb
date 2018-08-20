@@ -1,7 +1,8 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe Notification, type: :model do
-
   it "has valid factory" do
     expect(build(:notification)).to be_valid
   end
@@ -33,5 +34,4 @@ RSpec.describe Notification, type: :model do
       expect(notification.target).to eq "#fill_out_target_in_notification.rb"
     end
   end
-
 end

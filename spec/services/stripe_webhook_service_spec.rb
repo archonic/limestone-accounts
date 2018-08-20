@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'stripe_mock'
 
@@ -5,7 +7,13 @@ RSpec.describe StripeWebhookService, type: :service do
   let(:stripe_helper) { StripeMock.create_test_helper }
   before do
     StripeMock.start
-    stripe_helper.create_plan(id: 'example-plan-id', name: 'World Domination', amount: 100000, currency: 'usd', trial_period_days: $trial_period_days)
+    stripe_helper.create_plan(
+      id: 'example-plan-id',
+      name: 'World Domination',
+      amount: 100_000,
+      currency: "usd",
+      trial_period_days: TRIAL_PERIOD_DAYS
+    )
   end
   after { StripeMock.stop }
   let!(:au_subscribed) { create(:accounts_user, :subscribed, :admin) }
@@ -48,7 +56,7 @@ RSpec.describe StripeWebhookService, type: :service do
           amount: event_data.total,
           currency: event_data.currency,
           number: event_data.number,
-          paid_at: Time.at(event_data.date).to_datetime,
+          paid_at: Time.at(event_data.date).utc.to_datetime,
           lines: lines
         )
         expect_any_instance_of(Invoice).to receive(:save).and_return true
@@ -149,7 +157,7 @@ RSpec.describe StripeWebhookService, type: :service do
         expect(account_subscribed).to receive(:assign_attributes).once.with(
           plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
           trialing: true,
-          current_period_end: Time.at(subscription.current_period_end).to_datetime
+          current_period_end: Time.at(subscription.current_period_end).utc.to_datetime
         )
         expect(account_subscribed).to receive(:save).once.and_return(true)
         subject
@@ -183,7 +191,7 @@ RSpec.describe StripeWebhookService, type: :service do
             card_exp_year: @source.exp_year,
             plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             trialing: true,
-            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+            current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
           )
           expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
@@ -214,7 +222,7 @@ RSpec.describe StripeWebhookService, type: :service do
             past_due: false,
             unpaid: false,
             cancelled: false,
-            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+            current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
           )
           expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
@@ -234,7 +242,7 @@ RSpec.describe StripeWebhookService, type: :service do
             card_exp_year: @source.exp_year,
             plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
             past_due: true,
-            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+            current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
           )
           expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
@@ -254,7 +262,7 @@ RSpec.describe StripeWebhookService, type: :service do
             card_exp_year: @source.exp_year,
             unpaid: true,
             plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
-            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+            current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
           )
           expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
@@ -274,7 +282,7 @@ RSpec.describe StripeWebhookService, type: :service do
             card_exp_year: @source.exp_year,
             cancelled: true,
             plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
-            current_period_end: Time.at(@subscription.current_period_end).to_datetime
+            current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
           )
           expect(account_subscribed).to receive(:save).once.and_return(true)
           subject
@@ -307,7 +315,7 @@ RSpec.describe StripeWebhookService, type: :service do
         unpaid: false,
         cancelled: false,
         plan_id: Plan.find_by(stripe_id: 'example-plan-id').id,
-        current_period_end: Time.at(@subscription.current_period_end).to_datetime
+        current_period_end: Time.at(@subscription.current_period_end).utc.to_datetime
       )
       expect(account_subscribed).to receive(:save).once.and_return(true)
       subject
@@ -363,7 +371,7 @@ RSpec.describe StripeWebhookService, type: :service do
         'invoice.payment_failed',
         customer: mock_customer.id,
         attempt_count: 1,
-        next_payment_attempt: Time.at(1.hour.from_now)
+        next_payment_attempt: Time.at(1.hour.from_now).utc
       )
     }
     subject do

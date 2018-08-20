@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePlanService
   def initialize(plan_model)
     @plan_model = plan_model
@@ -12,7 +14,7 @@ class CreatePlanService
         amount: @plan_model.amount,
         interval: @plan_model.interval,
         currency: @plan_model.currency,
-        trial_period_days: $trial_period_days
+        trial_period_days: TRIAL_PERIOD_DAYS
       )
     rescue Stripe::InvalidRequestError => e
       StripeLogger.error "Error creating plan #{@plan_model.name}: #{e}"

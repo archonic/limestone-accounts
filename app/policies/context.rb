@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Context
   attr_reader :account, :accounts_user, :user
 

@@ -33,5 +33,4 @@ class NotificationsController < ApplicationController
         :read
       )
     end
-
 end

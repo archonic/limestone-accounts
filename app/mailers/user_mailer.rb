@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserMailer < ApplicationMailer
   include Rails.application.routes.url_helpers
 
@@ -72,7 +74,7 @@ class UserMailer < ApplicationMailer
 
   private
 
-  def email_with_name(user)
-    %("#{user.name}" <#{user.email}>)
-  end
+    def email_with_name(user)
+      %("#{user.name}" <#{user.email}>)
+    end
 end

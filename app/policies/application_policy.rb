@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 class ApplicationPolicy
   attr_reader :context, :record
   delegate :account, :accounts_user, :user, to: :context, allow_nil: true
 
   def initialize(context, record)
-    raise ArgumentError.new('Context argument is not an instance of Context') unless context.is_a? Context
-    raise Pundit::NotAuthorizedError, 'You must be signed in' unless context.try(:user)
-    raise Pundit::NotAuthorizedError, 'Account is missing' unless context.try(:account)
-    raise Pundit::NotAuthorizedError, 'Account is inactive (cancelled or unpaid)' if context.account.inactive?
-    raise Pundit::NotAuthorizedError, 'AccountUser is missing' unless context.try(:accounts_user)
-    raise Pundit::NotAuthorizedError, 'AccountUser is not associated with User and/or Account' unless context.accounts_user_associated?
+    raise ArgumentError, "Context argument is not an instance of Context" unless context.is_a? Context
+    raise Pundit::NotAuthorizedError, "You must be signed in" unless context.try(:user)
+    raise Pundit::NotAuthorizedError, "Account is missing" unless context.try(:account)
+    raise Pundit::NotAuthorizedError, "Account is inactive (cancelled or unpaid)" if context.account.inactive?
+    raise Pundit::NotAuthorizedError, "AccountUser is missing" unless context.try(:accounts_user)
+    raise Pundit::NotAuthorizedError, "AccountUser is not associated with User and/or Account" unless context.accounts_user_associated?
     @context = context
     @record = record
   end
@@ -51,12 +53,12 @@ class ApplicationPolicy
     delegate :account, :accounts_user, :user, to: :context, allow_nil: true
 
     def initialize(context, scope)
-      raise ArgumentError.new('Context argument is not an instance of Context') unless context.is_a? Context
-      raise Pundit::NotAuthorizedError, 'You must be signed in' unless context.try(:user)
-      raise Pundit::NotAuthorizedError, 'Account is missing' unless context.try(:account)
-      raise Pundit::NotAuthorizedError, 'Account is inactive (cancelled or unpaid)' if context.account.inactive?
-      raise Pundit::NotAuthorizedError, 'AccountUser is missing' unless context.try(:accounts_user)
-      raise Pundit::NotAuthorizedError, 'AccountUser is not associated with User and/or Account' unless context.accounts_user_associated?
+      raise ArgumentError "Context argument is not an instance of Context" unless context.is_a? Context
+      raise Pundit::NotAuthorizedError, "You must be signed in" unless context.try(:user)
+      raise Pundit::NotAuthorizedError, "Account is missing" unless context.try(:account)
+      raise Pundit::NotAuthorizedError, "Account is inactive (cancelled or unpaid)" if context.account.inactive?
+      raise Pundit::NotAuthorizedError, "AccountUser is missing" unless context.try(:accounts_user)
+      raise Pundit::NotAuthorizedError, "AccountUser is not associated with User and/or Account" unless context.accounts_user_associated?
       @context = context
       @scope = scope
     end

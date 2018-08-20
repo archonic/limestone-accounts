@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
@@ -20,7 +22,8 @@ Rails.application.routes.draw do
   mount StripeEvent::Engine, at: '/stripe/webhook'
 
   # Users are only added by invitation to accounts, but we still want users to manage their profile
-  devise_for :users, path: '',
+  devise_for :users,
+    path: '',
     path_names: {
       sign_in: 'signin',
       sign_out: 'signout'

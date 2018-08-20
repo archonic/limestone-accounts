@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Allows each attachment to have it's own policy
 # Example:
 # has_one_attached :avatar -> AvatarPolicy / avatar_policy.rb

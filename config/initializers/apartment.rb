@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 # You can have Apartment route to the appropriate Tenant by adding some Rack middleware.
 # Apartment can support many different "Elevators" that can take care of this routing to your data.
 # Require whichever Elevator you're using below or none if you have a custom one.
 #
-# require 'apartment/elevators/generic'
-# require 'apartment/elevators/domain'
-require 'apartment/elevators/subdomain'
-# require 'apartment/elevators/first_subdomain'
-# require 'apartment/elevators/host'
+# require "apartment/elevators/generic"
+# require "apartment/elevators/domain"
+require "apartment/elevators/subdomain"
+# require "apartment/elevators/first_subdomain"
+# require "apartment/elevators/host"
 
 # Apartment Configuration
 Apartment.configure do |config|
-
   # Add any models that you do not want to be multi-tenanted, but remain in the global (public) namespace.
   # A typical example would be a Customer or Tenant model that stores each Tenant's information.
   config.excluded_models = %w(
@@ -36,10 +37,10 @@ Apartment.configure do |config|
   # There are cases where you might want some schemas to always be in your search_path
   # e.g when using a PostgreSQL extension like hstore.
   # Any schemas added here will be available along with your selected Tenant.
-  config.persistent_schemas = %w( shared_extensions )
+  config.persistent_schemas = %w(shared_extensions)
 end
 
-Apartment::Elevators::Subdomain.excluded_subdomains = %w( www app admin secure public mail pop smtp ssl sftp ).freeze
+Apartment::Elevators::Subdomain.excluded_subdomains = %w(www app admin secure public mail pop smtp ssl sftp).freeze
 
 # Rails.application.config.middleware.use Apartment::Elevators::Domain
 Rails.application.config.middleware.use Apartment::Elevators::Subdomain

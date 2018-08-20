@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserInvitationService
   class << self
     def mass_invite!(account, emails, inviter)

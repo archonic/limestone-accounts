@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "administrate/base_dashboard"
 
 class PlanDashboard < Administrate::BaseDashboard
@@ -22,35 +24,35 @@ class PlanDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :name,
-    :amount,
-    :currency,
-    :interval,
-    :stripe_id,
-    :active
-  ].freeze
+  COLLECTION_ATTRIBUTES = %i(
+    id
+    name
+    amount
+    currency
+    interval
+    stripe_id
+    active
+  ).freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :name,
-    :amount,
-    :currency,
-    :interval,
-    :stripe_id,
-    :active
-  ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i(
+    id
+    name
+    amount
+    currency
+    interval
+    stripe_id
+    active
+  ).freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :name,
-    :active
-  ].freeze
+  FORM_ATTRIBUTES = %i(
+    name
+    active
+  ).freeze
 
   def display_resource(plan)
     plan.name + " (#{plan.cost})"

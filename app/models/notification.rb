@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notification < ApplicationRecord
   include Rails.application.routes.url_helpers
   belongs_to :sender, class_name: "User"
@@ -19,7 +21,7 @@ class Notification < ApplicationRecord
   end
 
   def target
-    path_params = target_path_params.try(:symbolize_keys).try(:merge, {read: true})
+    _path_params = target_path_params.try(:symbolize_keys).try(:merge, read: true)
     case action
     when "example"
       # example_path(path_params)

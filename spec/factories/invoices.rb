@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :invoice do
     association :account
-    stripe_id 'asdf'
+    stripe_id "asdf"
     amount 900
-    currency 'usd'
-    number 'd1a9e076f5-0001'
-    paid_at '2018-01-28 22:50:26'
+    currency "usd"
+    number "d1a9e076f5-0001"
+    paid_at "2018-01-28 22:50:26"
     lines [
       {
         "id": "sub_00000000000000",
@@ -17,14 +19,14 @@ FactoryBot.define do
         "livemode": false,
         "metadata": {},
         "period": {
-          "start": 1517179826,
-          "end": 1518389426
+          "start": 1_517_179_826,
+          "end": 1_518_389_426
         },
         "plan": {
           "id": "example-plan-id",
           "object": "plan",
           "amount": 1500,
-          "created": 1517179573,
+          "created": 1_517_179_573,
           "currency": "usd",
           "interval": "month",
           "interval_count": 1,
@@ -41,6 +43,6 @@ FactoryBot.define do
         "type": "subscription"
       }
     ]
-    initialize_with { Invoice.where(stripe_id: 'asdf').first_or_initialize }
+    initialize_with { Invoice.where(stripe_id: "asdf").first_or_initialize }
   end
 end

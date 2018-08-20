@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AccountsUsersController < ApplicationController
   before_action :set_accounts_user, only: [:destroy]
 

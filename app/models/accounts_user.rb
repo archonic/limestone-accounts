@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AccountsUser < ApplicationRecord
   include Discard::Model
   # Would prefer to not have optional: true but seems to be

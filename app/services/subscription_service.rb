@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Manages all calls to Stripe pertaining to subscriptions
 class SubscriptionService
   def initialize(current_account, params = {})
@@ -40,10 +42,10 @@ class SubscriptionService
       subscription.source = @params[:stripeToken] if @params[:stripeToken]
       # Update plan if one is provided, otherwise use user's existing plan
       plan_stripe_id = if @params[:plan_id]
-        Plan.find(@params[:plan_id]).stripe_id
-      else
-        @account.plan.stripe_id
-      end
+                         Plan.find(@params[:plan_id]).stripe_id
+                       else
+                         @account.plan.stripe_id
+                       end
       subscription.items = [{
         id: subscription.items.data[0].id,
         plan: plan_stripe_id,
@@ -55,15 +57,15 @@ class SubscriptionService
     account_attributes_to_update = {}
     # This is updated by the stripe webhook customer.updated
     # But we can update it here for a faster optimistic 'response'
-    account_attributes_to_update.merge!(
-      card_last4: @params[:card_last4],
-      card_exp_month: @params[:card_exp_month],
-      card_exp_year: @params[:card_exp_year],
-      card_type: @params[:card_brand]
-    ) if @params[:card_last4] && @params[:stripeToken]
-    account_attributes_to_update.merge!(
-      plan_id: @params[:plan_id].to_i
-    ) if @params[:plan_id]
+    if @params[:card_last4] && @params[:stripeToken]
+      account_attributes_to_update.merge!(
+        card_last4: @params[:card_last4],
+        card_exp_month: @params[:card_exp_month],
+        card_exp_year: @params[:card_exp_year],
+        card_type: @params[:card_brand]
+      )
+    end
+    account_attributes_to_update[:plan_id] = @params[:plan_id].to_i if @params[:plan_id]
     @account.update(account_attributes_to_update) if account_attributes_to_update.any?
     return true if success
   end
@@ -77,33 +79,33 @@ class SubscriptionService
 
   private
 
-  def customer
-    @customer ||= if @account.stripe_customer_id?
-      Stripe::Customer.retrieve(@account.stripe_customer_id)
-    else
-      Stripe::Customer.create(email: @account.owner.email)
+    def customer
+      @customer ||= if @account.stripe_customer_id?
+                      Stripe::Customer.retrieve(@account.stripe_customer_id)
+                    else
+                      Stripe::Customer.create(email: @account.owner.email)
+                    end
     end
-  end
 
-  def stripe_call(&block)
-    stripe_success = false
-    begin
-      block.call
-      stripe_success = true
-    # https://stripe.com/docs/api?lang=ruby#errors
-    rescue Stripe::CardError => e
-      StripeLogger.error(e.json_body[:error])
-    rescue Stripe::RateLimitError => e
-      StripeLogger.error 'Too many requests made to the API too quickly.'
-    rescue Stripe::InvalidRequestError => e
-      StripeLogger.error 'Invalid parameters were supplied to Stripe\'s API.'
-    rescue Stripe::AuthenticationError => e
-      StripeLogger.error 'Authentication with Stripe\'s API failed. Maybe you changed API keys recently.'
-    rescue Stripe::APIConnectionError => e
-      StripeLogger.error 'Network communication with Stripe failed.'
-    rescue Stripe::StripeError => e
-      StripeLogger.error 'Genric Stripe error.'
+    def stripe_call(&_block)
+      stripe_success = false
+      begin
+        yield
+        stripe_success = true
+      # https://stripe.com/docs/api?lang=ruby#errors
+      rescue Stripe::CardError => e
+        StripeLogger.error(e.json_body[:error])
+      rescue Stripe::RateLimitError
+        StripeLogger.error 'Too many requests made to the API too quickly.'
+      rescue Stripe::InvalidRequestError
+        StripeLogger.error 'Invalid parameters were supplied to Stripe\'s API.'
+      rescue Stripe::AuthenticationError
+        StripeLogger.error 'Authentication with Stripe\'s API failed. Maybe you changed API keys recently.'
+      rescue Stripe::APIConnectionError
+        StripeLogger.error 'Network communication with Stripe failed.'
+      rescue Stripe::StripeError
+        StripeLogger.error 'Genric Stripe error.'
+      end
+      stripe_success
     end
-    return stripe_success
-  end
 end

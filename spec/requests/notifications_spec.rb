@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe NotificationsController, type: :request do
   let!(:au) { create(:accounts_user, :subscribed) }

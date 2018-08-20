@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Users::InvitationsController, type: :request do
@@ -22,10 +24,10 @@ RSpec.describe Users::InvitationsController, type: :request do
         account,
         [email_valid],
         admin
-      ).and_return({
+      ).and_return(
         users_failed: [],
         users_successful: [User.new(email: email_valid)]
-      })
+      )
       expect(UserInvitationService).to receive(:mass_invite!).with(
         account,
         [email_valid],

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "administrate/base_dashboard"
 
 class AccountDashboard < Administrate::BaseDashboard
@@ -30,54 +32,53 @@ class AccountDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :name,
-    :subdomain,
-    :plan,
-    :current_period_end,
-    :trialing,
-    :past_due,
-    :unpaid,
-    :cancelled
-  ].freeze
+  COLLECTION_ATTRIBUTES = %i(
+    id
+    name
+    subdomain
+    plan
+    current_period_end
+    trialing
+    past_due
+    unpaid
+    cancelled
+  ).freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :name,
-    :subdomain,
-    :plan,
-    :stripe_customer_id,
-    :stripe_subscription_id,
-    :card_last4,
-    :card_exp_month,
-    :card_exp_year,
-    :current_period_end,
-    :trialing,
-    :past_due,
-    :unpaid,
-    :cancelled
-  ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i(
+    id
+    name
+    subdomain
+    plan
+    stripe_customer_id
+    stripe_subscription_id
+    card_last4
+    card_exp_month
+    card_exp_year
+    current_period_end
+    trialing
+    past_due
+    unpaid
+    cancelled
+  ).freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :name,
-    :subdomain,
-    :plan,
-    :current_period_end,
-    :trialing,
-    :past_due,
-    :unpaid,
-    :cancelled
-  ].freeze
+  FORM_ATTRIBUTES = %i(
+    name
+    subdomain
+    plan
+    current_period_end
+    trialing
+    past_due
+    unpaid
+    cancelled
+  ).freeze
 
   # Overwrite this method to customize how accounts are displayed
   # across all pages of the admin dashboard.
-  #
   def display_resource(account)
     'Account ' + account.name
   end

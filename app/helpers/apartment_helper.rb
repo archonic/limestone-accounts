@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApartmentHelper
   def current_account
     @current_account ||= Account.find_by(
