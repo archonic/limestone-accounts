@@ -12,7 +12,9 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
 COPY package.json yarn.lock ./
-RUN yarn --pure-lockfile
+RUN set -ex; \
+  yarn install --frozen-lockfile --production; \
+  yarn cache clean;
 
 COPY . .
 
