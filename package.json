@@ -8,7 +8,7 @@
     "coffee-loader": "^0.9.0",
     "coffeescript": "1.12.7",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.4.0",
+    "jquery": "^3.4.1",
     "popper.js": "^1.14",
     "postcss-smart-import": "^0.7.6",
     "rails-ujs": "^5.1.4",
