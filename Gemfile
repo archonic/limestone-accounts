@@ -43,7 +43,7 @@ gem "redis-rails", "~> 5.0"
 
 # Pretty html abstractions
 gem "haml", "~> 5"
-gem "simple_form", "~> 4"
+gem "simple_form", "~> 5"
 
 # Multi-tennancy
 gem "apartment", "~> 2.2"

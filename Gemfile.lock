@@ -372,7 +372,7 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 5)
-    simple_form (4.0.1)
+    simple_form (5.0.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
     simplecov (0.16.1)
@@ -475,7 +475,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers (~> 3.1)
   sidekiq (~> 5.0)
-  simple_form (~> 4)
+  simple_form (~> 5)
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
