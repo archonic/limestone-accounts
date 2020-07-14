@@ -59,7 +59,7 @@ gem "pundit", "~> 1"
 gem "discard", "~> 1"
 
 # Pretty admin dashboards
-gem "administrate", "~> 0.9"
+gem "administrate", "~> 0.13"
 
 gem "receipts"
 # Stripe stuff
