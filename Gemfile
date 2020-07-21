@@ -3,13 +3,13 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.5.3"
+ruby "2.3.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails"
 gem "rails", "~> 5.2"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 0.21"
+#gem "pg", "~> 0.21"
 
 # Use Puma as the app server
 gem "puma", "~> 3.12"
@@ -24,7 +24,7 @@ gem "sass-rails", "~> 5"
 gem "uglifier", ">= 1.3.0"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "webpacker", ">= 4.0.x"
+#gem "webpacker", ">= 4.0.x"
 
 # Use CoffeeScript for .coffee assets and views
 gem "coffee-rails", "~> 4.2"
@@ -50,8 +50,9 @@ gem "apartment", "~> 2.2"
 gem "apartment-sidekiq", "~> 1.2"
 
 # Authentication
-gem "devise", "~> 4"
-gem "devise_invitable", "~> 1.7"
+gem "devise", "4.6.0"
+gem "devise_invitable", "~> 1.6.1"
+gem "responders", "2.4.0"
 # Authorization
 gem "pundit", "~> 1"
 

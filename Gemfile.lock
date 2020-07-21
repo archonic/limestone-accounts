@@ -134,15 +134,15 @@ GEM
     database_cleaner (1.7.0)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
-    devise (4.7.1)
+    devise (4.6.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
+      railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
-    devise_invitable (1.7.4)
-      actionmailer (>= 4.1.0)
-      devise (>= 4.0.0)
+    devise_invitable (1.6.1)
+      actionmailer (>= 3.2.6)
+      devise (>= 3.2.0)
     diff-lcs (1.3)
     discard (1.0.0)
       activerecord (>= 4.2, < 6)
@@ -240,7 +240,6 @@ GEM
     parser (2.5.1.2)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
-    pg (0.21.0)
     powerpack (0.1.2)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
@@ -258,8 +257,6 @@ GEM
       activesupport (>= 3.0.0)
     rack (2.2.3)
     rack-protection (2.0.3)
-      rack
-    rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -317,9 +314,9 @@ GEM
       redis-store (>= 1.2, < 2)
     redis-store (1.5.0)
       redis (>= 2.2, < 5)
-    responders (3.0.0)
-      actionpack (>= 5.0)
-      railties (>= 5.0)
+    responders (2.4.0)
+      actionpack (>= 4.2.0, < 5.3)
+      railties (>= 4.2.0, < 5.3)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.1)
@@ -428,10 +425,6 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webpacker (4.0.0.pre.3)
-      activesupport (>= 4.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 4.2)
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -453,8 +446,8 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   counter_culture (~> 1.11)
   database_cleaner (~> 1.6)
-  devise (~> 4)
-  devise_invitable (~> 1.7)
+  devise (= 4.6.0)
+  devise_invitable (~> 1.6.1)
   discard (~> 1)
   factory_bot_rails (~> 4.8)
   faker (~> 1.8)
@@ -467,7 +460,6 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   mini_magick (>= 4.3.5)
-  pg (~> 0.21)
   pretender
   pry
   puma (~> 3.12)
@@ -477,6 +469,7 @@ DEPENDENCIES
   rails-controller-testing (~> 1)
   receipts
   redis-rails (~> 5.0)
+  responders (= 2.4.0)
   rspec-rails (~> 3.6)
   rubocop
   sass-rails (~> 5)
@@ -494,10 +487,9 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
-  webpacker (>= 4.0.x)
 
 RUBY VERSION
-   ruby 2.5.3p105
+   ruby 2.3.0p0
 
 BUNDLED WITH
    1.17.1
