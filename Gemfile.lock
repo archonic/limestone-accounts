@@ -450,7 +450,7 @@ DEPENDENCIES
   devise_invitable (~> 1.6.1)
   discard (~> 1)
   factory_bot_rails (~> 4.8)
-  faker (~> 1.8)
+  faker (~> 1.7)
   flipper
   flipper-redis
   flipper-ui
@@ -489,7 +489,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 RUBY VERSION
-   ruby 2.3.0p0
+   ruby 2.4.0p0
 
 BUNDLED WITH
-   1.17.1
+   2.1.4
