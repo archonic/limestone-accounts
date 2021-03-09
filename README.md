@@ -1,6 +1,9 @@
 # Limestone Accounts
 [ ![Codeship Status for archonic/limestone-accounts](https://app.codeship.com/projects/eb53d150-02ea-0136-1806-3ebecea35641/status?branch=master)](https://app.codeship.com/projects/280180)
 
+*WARNING* Limestone Accounts is no longering being maintained due to it's reliance on the Apartment Gem. If you would like a multitenant solution in Limestone, you can vote for ActsAsTenant here: 
+https://www.strawpoll.me/42684734/
+
 Limestone Accounts is a boilerplate SaaS app built with Rails 5.2 and has an opinionated integration with NPM using [Webpacker](https://github.com/rails/webpacker) and [Stimulus](https://stimulusjs.org/).
 
 Limestone Accounts is multitenant, meaning each account has one subscription and potentially many users through invitations. If you want each user to have their own subscription, try [Limestone](https://github.com/archonic/limestone).
